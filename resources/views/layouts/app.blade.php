@@ -162,7 +162,7 @@
                 <div id="collapseArticle" class="collapse" aria-labelledby="headingContent" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Writter Content:</h6>
-                        <a class="collapse-item" href="{{route('article')}}">Blog</a>
+                        <a class="collapse-item" href="{{route('/')}}">Blog</a>
                     </div>
                 </div>
             </li>
@@ -176,8 +176,8 @@
                 <div id="collapsMaster" class="collapse" aria-labelledby="headingMaster" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Master Data:</h6>
-                        <a class="collapse-item" href="{{route('category')}}">Master Kategori</a>
-                        <a class="collapse-item" href="{{route('tag')}}">Master Tag</a>
+                        <a class="collapse-item" href="{{route('/')}}">Master Kategori</a>
+                        <a class="collapse-item" href="{{route('/')}}">Master Tag</a>
                     </div>
                 </div>
             </li>
@@ -191,7 +191,7 @@
                 <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Data Pengguna:</h6>
-                        <a class="collapse-item" href="{{route('users')}}">Data Pengguna</a>
+                        <a class="collapse-item" href="{{route('/')}}">Data Pengguna</a>
                     </div>
                 </div>
             </li>
@@ -205,10 +205,10 @@
                 <div id="collapseContents" class="collapse" aria-labelledby="headingContent" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Content:</h6>
-                        <a class="collapse-item" href="{{route('menu')}}">Menu</a>
-                        <a class="collapse-item" href="{{route('galery')}}">Galeri</a>
-                        <a class="collapse-item" href="{{route('carousel')}}">Slide Show</a>
-                        <a class="collapse-item" href="{{route('calendar')}}">Kalender</a>
+                        <a class="collapse-item" href="{{route('/')}}">Menu</a>
+                        <a class="collapse-item" href="{{route('/')}}">Galeri</a>
+                        <a class="collapse-item" href="{{route('/')}}">Slide Show</a>
+                        <a class="collapse-item" href="{{route('/')}}">Kalender</a>
                     </div>
                 </div>
             </li>
@@ -230,15 +230,15 @@
                 <div id="collapseSetting" class="collapse" aria-labelledby="headingSetting" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Setting & Log Activity:</h6>
-                        <a class="collapse-item" href="{{ route('setting') }}">Pengaturan</a>
-                        <a class="collapse-item" href="{{ route('log') }}">Log Activity</a>
+                        <a class="collapse-item" href="{{ route('/') }}">Pengaturan</a>
+                        <a class="collapse-item" href="{{ route('/') }}">Log Activity</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('information') }}">
+                <a class="nav-link" href="{{ route('/') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Information</span></a>
             </li>
@@ -282,15 +282,15 @@
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{route('profile')}}">
+                                <a class="dropdown-item" href="{{route('/')}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="{{route('setting')}}">
+                                <a class="dropdown-item" href="{{route('/')}}">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="{{route('log')}}">
+                                <a class="dropdown-item" href="{{route('/')}}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>
@@ -406,7 +406,7 @@
             var data = new FormData();
             data.append("image", image);
             $.ajax({
-                url: "{{ route('article.image.upload') }}",
+                url: "{{ route('/') }}",
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -426,7 +426,7 @@
             var filename = src.split('/').pop();
             $.ajax({
                 type: 'POST',
-                url: "{{ route('article.image.delete') }}",
+                url: "{{ route('/') }}",
                 data: {
                     filename: filename,
                     _token: '{{ csrf_token() }}'

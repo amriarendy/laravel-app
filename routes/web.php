@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
 Route::get('/reload-captcha', [WelcomeController::class, 'captcha'])->name('reload.captcha');
+Route::post('/test', [WelcomeController::class, 'test'])->name('test');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

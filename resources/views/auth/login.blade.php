@@ -61,12 +61,12 @@
                                 @csrf
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Email:</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email:" required>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email:">
                                     <div id="errEmail"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Password:</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password:" required>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password:">
                                     <div id="errPassword"></div>
                                 </div>
                                 <hr>
@@ -74,7 +74,7 @@
                                     <div class="col-7">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input type="text" class="form-control bg-light border-0 small" id="captcha" name="captcha" placeholder="Captcha..." required>
+                                                <input type="text" class="form-control bg-light border-0 small" id="captcha" name="captcha" placeholder="Captcha...">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-danger" type="button" id="reload" title="Reload Captcha">
                                                         <i class="fas fa-sync-alt fa-sm"></i>
@@ -95,8 +95,12 @@
                                 <button type="submit" class="btn btn-primary btn-block font-weight-bold"><i class="fas fa-spinner fa-spin" style="display:none;"></i>
                                     <span class="text-loader">Login</span>
                                 </button>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="{{ route('login') }}">Login</a>
+                                </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -155,7 +159,10 @@
                         $(".btn .text-loader").html("Submit");
                         $('#loginForm')[0].reset();
                         window.location = "{{ route('dashboard') }}";
-                        return toastr[res.status](res.status, res.message);
+                        return Toast.fire({
+                            icon: "success",
+                            title: value
+                        });
                     },
                     error: function(err) {
                         let error = err.responseJSON;
@@ -166,7 +173,10 @@
                         $('#errPassword').append(errorPassword && !$('#errPassword').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
                         $('#errCaptcha').append(errorCaptcha && !$('#errCaptcha').text().includes(errorCaptcha) ? '<span class="text-danger">' + errorCaptcha + '</span><br/>' : '');
                         $.each(error.errors, function(index, value) {
-                            return toastr['warning'](value);
+                            return Toast.fire({
+                                icon: "error",
+                                title: value
+                            });
                         })
                         $("#pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();

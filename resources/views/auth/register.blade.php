@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -57,34 +58,34 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4 font-weight-bold">Create Account</h1>
                             </div>
-                            <form id="loginForm" class="user" action="" method="post">
+                            <form id="registerForm" class="user" action="" method="post">
                                 @csrf
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Email:</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email:" required>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email:">
                                     <div id="errEmail"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Full Name:</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Full Name:" required>
-                                    <div id="errFullName"></div>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Full Name:">
+                                    <div id="errName"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Password:</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password:" required>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password:">
                                     <div id="errPassword"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold text-dark" for="">Confirm Password:</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Confirm Password:" required>
-                                    <div id="errPassword"></div>
+                                    <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Confirm Password:">
+                                    <div id="errPasswordConfirm"></div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-7">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <input type="text" class="form-control bg-light border-0 small" id="captcha" name="captcha" placeholder="Captcha..." required>
+                                                <input type="text" class="form-control bg-light border-0 small" id="captcha" name="captcha" placeholder="Captcha...">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-danger" type="button" id="reload" title="Reload Captcha">
                                                         <i class="fas fa-sync-alt fa-sm"></i>
@@ -102,11 +103,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <button type="submit" class="btn btn-primary btn-block font-weight-bold"><i class="fas fa-spinner fa-spin" style="display:none;"></i>
                                     <span class="text-loader">Create Account!</span>
                                 </button>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="{{ route('login') }}">Login</a>
+                                </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -133,28 +139,23 @@
             }
         });
         /* toast file */
-        toastr.options = {
-            "closeButton": true,
-            "debug": true,
-            "newestOnTop": false,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": true,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
 
         $(document).ready(function() {
-            $('#loginForm').on('submit', function(e) {
+            $('#registerForm').on('submit', function(e) {
                 e.preventDefault();
                 $.ajax({
-                    url: "{{ route('login') }}",
+                    url: "{{ route('register') }}",
                     type: 'POST',
                     data: new FormData(this),
                     contentType: false,
@@ -162,25 +163,34 @@
                     success: function(res) {
                         $("#pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();
-                        $(".btn .text-loader").html("Submit");
-                        $('#loginForm')[0].reset();
-                        window.location = "{{ route('dashboard') }}";
-                        return toastr[res.status](res.status, res.message);
+                        $(".btn .text-loader").html("Create Account");
+                        $('#registerForm')[0].reset();
+                        return Toast.fire({
+                            icon: res.status,
+                            title: res.message
+                        });
                     },
                     error: function(err) {
                         let error = err.responseJSON;
                         let errorEmail = error.errors.email;
+                        let errorName = error.errors.name;
                         let errorPassword = error.errors.password;
+                        let errorPasswordConfirm = error.errors.password_confirm;
                         let errorCaptcha = error.errors.captcha;
                         $('#errEmail').append(errorEmail && !$('#errEmail').text().includes(errorEmail) ? '<span class="text-danger">' + errorEmail + '</span><br/>' : '');
+                        $('#errName').append(errorName && !$('#errName').text().includes(errorName) ? '<span class="text-danger">' + errorName + '</span><br/>' : '');
                         $('#errPassword').append(errorPassword && !$('#errPassword').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
+                        $('#errPasswordConfirm').append(errorPasswordConfirm && !$('#errPasswordConfirm').text().includes(errorPasswordConfirm) ? '<span class="text-danger">' + errorPasswordConfirm + '</span><br/>' : '');
                         $('#errCaptcha').append(errorCaptcha && !$('#errCaptcha').text().includes(errorCaptcha) ? '<span class="text-danger">' + errorCaptcha + '</span><br/>' : '');
                         $.each(error.errors, function(index, value) {
-                            return toastr['warning'](value);
+                            return Toast.fire({
+                                icon: "error",
+                                title: value
+                            });
                         })
-                        $("#pageloader").fadeOut();
+                        $(".pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();
-                        $(".btn .text-loader").html("Login");
+                        $(".btn .text-loader").html("Create Account");
                     }
                 })
             })
@@ -197,7 +207,7 @@
         });
 
         $(document).ready(function() {
-            $("#loginForm").on("submit", function() {
+            $("#registerForm").on("submit", function() {
                 $(".btn .fa-spinner").show();
                 $(".btn .text-loader").html("Loading");
             });

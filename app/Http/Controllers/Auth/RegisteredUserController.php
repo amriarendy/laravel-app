@@ -28,14 +28,28 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
+        $rules = $request->validate(
+            [
+                'email' => 'required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class,
+                'name' => 'required', 'string', 'max:255',
+                'password' => 'required', 'confirmed', Rules\Password::defaults(),
+                'password_confirm' => 'required|same:password',
+                'captcha' => 'required|captcha',
+            ],
+            [
+                'email.required' => 'email is required',
+                'email.unique' => 'email exist',
+                'email.email' => 'valid email format',
+                'name.required' => 'full name is required',
+                'password.required' => 'password is required',
+                'password_confirm.required' => 'password confirm is required',
+                'password_confirm.same' => 'password confirm must match password',
+                'captcha.required' => 'captcha is required',
+                'captcha.captcha' => 'captcha failed, reload captcha!',
+            ]
+        );
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -43,10 +57,15 @@ class RegisteredUserController extends Controller
             'picture' => "default.png",
         ]);
 
-        event(new Registered($user));
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Success created account!',
+        ]);
+        // event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // return redirect(RouteServiceProvider::HOME);
     }
 }
