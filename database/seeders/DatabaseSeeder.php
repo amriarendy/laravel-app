@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Amria Rendy',
             'email' => 'admin@admin.com',
             'password' => 'admin@admin.com',
-            'picture' => 'default.png',
+            'picture' => 'github-mark-white.svg',
         ]);
 
         DB::table('master_categories')->insert([

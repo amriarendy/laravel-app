@@ -120,8 +120,6 @@
         </div>
 
     </div>
-
-    </div>
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('assets/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -138,6 +136,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         /* toast file */
         const Toast = Swal.mixin({
             toast: true,
@@ -182,15 +181,13 @@
                         $('#errPassword').append(errorPassword && !$('#errPassword').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
                         $('#errPasswordConfirm').append(errorPasswordConfirm && !$('#errPasswordConfirm').text().includes(errorPasswordConfirm) ? '<span class="text-danger">' + errorPasswordConfirm + '</span><br/>' : '');
                         $('#errCaptcha').append(errorCaptcha && !$('#errCaptcha').text().includes(errorCaptcha) ? '<span class="text-danger">' + errorCaptcha + '</span><br/>' : '');
-                        $.each(error.errors, function(index, value) {
-                            return Toast.fire({
-                                icon: "error",
-                                title: value
-                            });
-                        })
                         $(".pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();
-                        $(".btn .text-loader").html("Create Account");
+                        $(".btn .text-loader").html("Login");
+                        return Toast.fire({
+                            icon: "error",
+                            title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.'
+                        });
                     }
                 })
             })
@@ -208,6 +205,7 @@
 
         $(document).ready(function() {
             $("#registerForm").on("submit", function() {
+                $(".pageloader").fadeIn();
                 $(".btn .fa-spinner").show();
                 $(".btn .text-loader").html("Loading");
             });

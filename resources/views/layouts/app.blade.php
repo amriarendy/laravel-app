@@ -133,7 +133,8 @@
         <ul class="navbar-nav bg-gradient-black sidebar sidebar-dark accordion" id="accordionSidebar">
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{url('/')}}">
-                <img class="img-fluid px-1 px-sm-1 mt-1 mb-1" src="{{ asset('ikahi-icon.png') }}" alt="website icon">
+                <img class="img-fluid px-1 px-sm-1 mt-1 mb-1" src="https://laravel.com/img/logomark.min.svg" alt="website icon">
+                <img class="img-fluid px-1 px-sm-1 mt-1 mb-1" src="https://laravel.com/img/logotype.min.svg" alt="website icon">
             </a>
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -176,8 +177,8 @@
                 <div id="collapsMaster" class="collapse" aria-labelledby="headingMaster" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Master Data:</h6>
-                        <a class="collapse-item" href="{{route('/')}}">Master Kategori</a>
-                        <a class="collapse-item" href="{{route('/')}}">Master Tag</a>
+                        <a class="collapse-item" href="{{route('category')}}">Master Kategori</a>
+                        <a class="collapse-item" href="{{route('tag')}}">Master Tag</a>
                     </div>
                 </div>
             </li>
@@ -278,7 +279,8 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-light-600 font-weight-bold small">{{ Auth::user()->name; }}</span>
-                                <img class="img-profile rounded-circle" src="{{ asset('storage/profile/'.Auth::user()->picture) }}">
+                                <div class="topbar-divider d-none d-sm-block"></div>
+                                <img class="img-profile rounded-circle" src="{{ asset(Auth::user()->picture) }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -480,23 +482,18 @@
             })
         })
 
-        /* toast file */
-        toastr.options = {
-            "closeButton": true,
-            "debug": true,
-            "newestOnTop": false,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": true,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        }
+        /* mixin alert */
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
 
         /* page loader */
         $(document).ready(function() {

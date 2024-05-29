@@ -45,68 +45,8 @@
         <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="on loading..." />
     </div>
     <div class="container">
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-5 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4 font-weight-bold">Login</h1>
-                            </div>
-                            <form id="loginForm" class="user" action="" method="post">
-                                @csrf
-                                <div class="form-group">
-                                    <label class="font-weight-bold text-dark" for="">Email:</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email:">
-                                    <div id="errEmail"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="font-weight-bold text-dark" for="">Password:</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password:">
-                                    <div id="errPassword"></div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-7">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control bg-light border-0 small" id="captcha" name="captcha" placeholder="Captcha...">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-danger" type="button" id="reload" title="Reload Captcha">
-                                                        <i class="fas fa-sync-alt fa-sm"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div id="errCaptcha"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-5">
-                                        <div class="form-group">
-                                            <div class="captcha">
-                                                <span>{!! Captcha::img('flat') !!}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block font-weight-bold"><i class="fas fa-spinner fa-spin" style="display:none;"></i>
-                                    <span class="text-loader">Login</span>
-                                </button>
-                                <hr>
-                                <div class="text-center">
-                                    <a class="small font-weight-bold" href="{{ route('register') }}">Create Account!</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        
+        @yield('content')
 
     </div>
     <!-- Bootstrap core JavaScript-->
@@ -125,7 +65,7 @@
             }
         });
 
-        /* toast file */
+        /* mixin alert */
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
