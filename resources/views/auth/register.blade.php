@@ -164,6 +164,7 @@
                         $(".btn .fa-spinner").hide();
                         $(".btn .text-loader").html("Create Account");
                         $('#registerForm')[0].reset();
+                        window.location = "{{ route('login') }}";
                         return Toast.fire({
                             icon: res.status,
                             title: res.message

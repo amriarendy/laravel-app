@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'Amria Rendy',
             'email' => 'admin@admin.com',
-            'password' => 'admin@admin.com',
+            'password' => Hash::make('admin@admin.com'),
             'picture' => 'github-mark-white.svg',
         ]);
 

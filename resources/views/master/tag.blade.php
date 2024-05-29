@@ -9,7 +9,7 @@
 <!-- Content Row -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <a class="btn btn-primary font-weight-bold" data-toggle="modal" data-target="#addModal" title="Tambah Data">Tambah</a>
+    <a class="btn btn-primary font-weight-bold" data-toggle="modal" data-target="#addModal" title="Create Data">Create</a>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -49,13 +49,13 @@
 <div class="modal fade" id="addModal" aria-labelledby="addModalLabel" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="addModalLabel">Tambah Data</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <form class="form" action="" id="addForm" name="addForm" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="addModalLabel">Create Data</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <div class="modal-body">
           @csrf
           <div class="form-group">
@@ -65,9 +65,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" id="addBtn" class="btn btn-primary"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
-            <span class="text-loader">Submit</span></button>
+          <button type="button" class="btn btn-secondary font-weight-bold closeBtn" data-dismiss="modal">Close</button>
+          <button type="submit" id="addBtn" class="btn btn-primary font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+            <span class="text-loader"><i class="fas fa-save"></i> Submit</span></button>
         </div>
       </form>
     </div>
@@ -79,13 +79,13 @@
 <div class="modal fade" id="editModal" aria-labelledby="editModalLabel" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="editModalLabel">Edit Data</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <form class="form" action="" id="editForm" name="editForm" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold" id="editModalLabel">Edit Data</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
         <div class="modal-body">
           <div class="form-group">
             @csrf
@@ -98,13 +98,14 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" id="editBtn" class="btn btn-primary"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
-            <span class="text-loader">Submit</span></button>
+          <button type="button" class="btn btn-secondary font-weight-bold closeBtn" data-dismiss="modal">Close</button>
+          <button type="submit" id="editBtn" class="btn btn-primary font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+            <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+          </button>
+        </div>
       </form>
     </div>
   </div>
-</div>
 </div>
 <!-- ./Modal Edit -->
 
@@ -128,14 +129,14 @@
         success: function(res) {
           $("#pageloader").fadeOut();
           $(".btn .fa-spinner").hide();
-          $(".btn .text-loader").html("Submit");
+          $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
           if (res.code == 200) {
             $('#addModal').modal('hide');
             $('#addForm')[0].reset();
             $('.table').load(location.href + ' .table');
             return Toast.fire({
-                icon: "success",
-                title: '<b class="text-success">Success:</b> create data success.',
+              icon: "success",
+              title: '<b class="text-success">Success:</b> create data success.',
             });
           }
         },
@@ -145,11 +146,11 @@
           $('#errAddTag').append(errorTag && !$('#errAddTag').text().includes(errorTag) ? '<span class="text-danger">' + errorTag + '</span><br/>' : '');
           $("#pageloader").fadeOut();
           $(".btn .fa-spinner").hide();
-          $(".btn .text-loader").html("Submit");
-            return Toast.fire({
-                icon: "error",
-                title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
-            });
+          $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+          return Toast.fire({
+            icon: "error",
+            title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+          });
         }
       });
     })
@@ -169,31 +170,31 @@
           contentType: false,
           processData: false,
           success: function(res) {
-          $("#pageloader").fadeOut();
-          $(".btn .fa-spinner").hide();
-          $(".btn .text-loader").html("Submit");
-          if (res.code == 200) {
-            $('#editModal').modal('hide');
-            $('#editForm')[0].reset();
-            $('.table').load(location.href + ' .table');
-            return Toast.fire({
+            $("#pageloader").fadeOut();
+            $(".btn .fa-spinner").hide();
+            $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+            if (res.code == 200) {
+              $('#editModal').modal('hide');
+              $('#editForm')[0].reset();
+              $('.table').load(location.href + ' .table');
+              return Toast.fire({
                 icon: "success",
                 title: '<b class="text-success">Success:</b> update data success.',
+              });
+            }
+          },
+          error: function(err) {
+            let error = err.responseJSON;
+            let errorTag = error.errors.tag;
+            $('#errEditTag').append(errorTag && !$('#errEditTag').text().includes(errorTag) ? '<span class="text-danger">' + errorTag + '</span><br/>' : '');
+            $("#pageloader").fadeOut();
+            $(".btn .fa-spinner").hide();
+            $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+            return Toast.fire({
+              icon: "error",
+              title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
             });
           }
-        },
-          error: function(err) {
-          let error = err.responseJSON;
-          let errorTag = error.errors.tag;
-          $('#errEditTag').append(errorTag && !$('#errEditTag').text().includes(errorTag) ? '<span class="text-danger">' + errorTag + '</span><br/>' : '');
-          $("#pageloader").fadeOut();
-          $(".btn .fa-spinner").hide();
-          $(".btn .text-loader").html("Submit");
-            return Toast.fire({
-                icon: "error",
-                title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
-            });
-        }
         });
       });
     });
@@ -213,8 +214,8 @@
             if (res.code == 200) {
               $('.table').load(location.href + ' .table');
               return Toast.fire({
-                  icon: "success",
-                  title: '<b class="text-success">Success:</b> update data success.',
+                icon: "success",
+                title: '<b class="text-success">Success:</b> update data success.',
               });
             }
           }

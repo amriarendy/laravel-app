@@ -158,12 +158,12 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseArticle" aria-expanded="true" aria-controls="collapseArticle">
                     <i class="fas fa-newspaper"></i>
-                    <span>Blog</span>
+                    <span>Content</span>
                 </a>
                 <div id="collapseArticle" class="collapse" aria-labelledby="headingContent" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Writter Content:</h6>
-                        <a class="collapse-item" href="{{route('/')}}">Blog</a>
+                        <a class="collapse-item" href="{{route('blog')}}">Blogs</a>
                     </div>
                 </div>
             </li>
@@ -177,8 +177,8 @@
                 <div id="collapsMaster" class="collapse" aria-labelledby="headingMaster" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Master Data:</h6>
-                        <a class="collapse-item" href="{{route('category')}}">Master Kategori</a>
-                        <a class="collapse-item" href="{{route('tag')}}">Master Tag</a>
+                        <a class="collapse-item" href="{{route('category')}}">Master Categories</a>
+                        <a class="collapse-item" href="{{route('tag')}}">Master Tags</a>
                     </div>
                 </div>
             </li>
@@ -187,29 +187,12 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">
                     <i class="fas fa-users"></i>
-                    <span>Data Pengguna</span>
+                    <span>Users</span>
                 </a>
                 <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Data Pengguna:</h6>
-                        <a class="collapse-item" href="{{route('/')}}">Data Pengguna</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Content Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseContents" aria-expanded="true" aria-controls="collapseContents">
-                    <i class="fas fa-newspaper"></i>
-                    <span>Konten</span>
-                </a>
-                <div id="collapseContents" class="collapse" aria-labelledby="headingContent" data-parent="#accordionSidebar">
-                    <div class="bg-black py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Content:</h6>
-                        <a class="collapse-item" href="{{route('/')}}">Menu</a>
-                        <a class="collapse-item" href="{{route('/')}}">Galeri</a>
-                        <a class="collapse-item" href="{{route('/')}}">Slide Show</a>
-                        <a class="collapse-item" href="{{route('/')}}">Kalender</a>
+                        <h6 class="collapse-header">Users:</h6>
+                        <a class="collapse-item" href="{{route('/')}}">Users Data</a>
                     </div>
                 </div>
             </li>
@@ -219,20 +202,19 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                SETTING & LOG ACTIVITY
+                Setting & Information
             </div>
 
             <!-- Nav Item - Setting Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSetting" aria-expanded="true" aria-controls="collapseSetting">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Setting & Log Activity</span>
+                    <i class="fas fa-fw fa-cogs"></i>
+                    <span>Setting</span>
                 </a>
                 <div id="collapseSetting" class="collapse" aria-labelledby="headingSetting" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Setting & Log Activity:</h6>
-                        <a class="collapse-item" href="{{ route('/') }}">Pengaturan</a>
-                        <a class="collapse-item" href="{{ route('/') }}">Log Activity</a>
+                        <h6 class="collapse-header">Setting Menu:</h6>
+                        <a class="collapse-item" href="{{ route('/') }}">Meta Data</a>
                     </div>
                 </div>
             </li>
@@ -240,7 +222,7 @@
             <!-- Nav Item - Tables -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('/') }}">
-                    <i class="fas fa-fw fa-table"></i>
+                    <i class="fas fa-fw fa-info-circle"></i>
                     <span>Information</span></a>
             </li>
 
@@ -501,6 +483,13 @@
                 $("#pageloader").fadeIn();
                 $(".btn .fa-spinner").show();
                 $(".btn .text-loader").html("Loading");
+            });
+        });
+
+        // close btn for reset form
+        $(document).ready(function() {
+            $(".closeBtn").on("click", function() {
+                $('.form')[0].reset();
             });
         });
     </script>

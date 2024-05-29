@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Master\TagController;
@@ -33,6 +33,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/master/tag/update', [TagController::class, 'update'])->name('tag.update');
     Route::post('/dashboard/master/tag/delete', [TagController::class, 'destroy'])->name('tag.delete');
     Route::get('/dashboard/master/category', [CategoryController::class, 'index'])->name('category');
+    Route::post('/dashboard/master/category/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::post('/dashboard/master/category/update', [CategoryController::class, 'update'])->name('category.update');
+    Route::post('/dashboard/master/category/delete', [CategoryController::class, 'destroy'])->name('category.delete');
+    Route::get('/dashboard/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/dashboard/blog/create', [BlogController::class, 'create'])->name('blog.create');
+    Route::post('/dashboard/blog/store', [BlogController::class, 'store'])->name('blog.store');
+    Route::get('/dashboard/blog/edit', [BlogController::class, 'index'])->name('blog.edit');
+    Route::post('/dashboard/blog/update', [BlogController::class, 'update'])->name('blog.update');
+    Route::post('/dashboard/blog/delete', [BlogController::class, 'destroy'])->name('blog.delete');
 });
 
 require __DIR__ . '/auth.php';
