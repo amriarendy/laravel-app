@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('views', function (Blueprint $table) {
             $table->id();
-            $table->integer('content_id')->nullable();
+            $table->integer('blog_id')->nullable();
             $table->string('route')->nullable();
             $table->timestamps();
         });

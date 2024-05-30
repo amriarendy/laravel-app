@@ -40,20 +40,22 @@
                     </tr>
                 </tfoot>
                 <tbody>
+                    @foreach ($data as $row)
                     <tr>
-                        <td class="text-center">1.</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td class="text-center">Berita</td>
-                        <td class="text-center">Amria Rendy</td>
-                        <td class="text-center">25</td>
-                        <td class="text-center">2011/04/25</td>
+                        <td class="text-center">{{ $loop->iteration}}. </td>
+                        <td>{{ $row->image }}</td>
+                        <td>{{ $row->title }}</td>
+                        <td class="text-center">{{ $row->category }}</td>
+                        <td class="text-center">{{ $row->name }}</td>
+                        <td class="text-center">{{ $row->id }}</td>
+                        <td class="text-center">{{ $row->date_post }}</td>
                         <td class="text-center">
                             <a class="btn-circle btn-sm btn-info" href="#" title="Info"><i class="fas fa-info"></i></a>
                             <a class="btn-circle btn-sm btn-warning" data-toggle="modal" data-target="#editModal" title="Edit"><i class="fas fa-edit"></i></a>
                             <a class="btn-circle btn-sm btn-danger" href="#" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

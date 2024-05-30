@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('keywords', function (Blueprint $table) {
+        Schema::create('archives', function (Blueprint $table) {
             $table->id();
             $table->integer('blog_id')->nullable();
-            $table->string('tag');
+            $table->string('file');
+            $table->string('sort_by');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('keywords');
+        Schema::dropIfExists('archives');
     }
 };

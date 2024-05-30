@@ -35,25 +35,26 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label class="font-weight-bold" for="category">Category <span style="color: red;">*</span></label>
-                        <select class="form-control" name="" id="">
+                        <select class="form-control" name="category">
                             <option value="">-Choose Category-</option>
+                            @foreach ($categories as $row)
+                            <option value="{{ $row->id }}">{{ $row->category }}</option>
+                            @endforeach
                         </select>
                         <div id="errCategory"></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label class="font-weight-bold" for="keyword">Keyword</label>
-                        <select class="form-control" name="" id="">
-                            <option value="">-Choose Keywords-</option>
-                        </select>
-                        <div id="errKeyword"></div>
+                        <label class="font-weight-bold" for="files">File</label>
+                        <input type="file" class="form-control" id="files" name="files[]" multiple="multiple" placeholder="file: ">
+                        <div id="errFiles"></div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label class="font-weight-bold" for="image">Thumbnail</label>
-                        <input type="file" class="form-control" name="image">
+                        <input type="file" class="form-control" name="beforeCroppie" id="beforeCroppie" accept="image/*">
                         <div id="errImage"></div>
                     </div>
                 </div>
@@ -73,9 +74,13 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label class="font-weight-bold" for="files">File</label>
-                        <input type="file" class="form-control" name="files">
-                        <div id="errFiles"></div>
+                        <label class="font-weight-bold" for="keyword">Keyword</label>
+                        <select class="form-control multiple-select2" name="tag[]" multiple="multiple">
+                            @foreach ($keywords as $row)
+                            <option value="{{ $row->tag }}">{{ $row->tag }}</option>
+                            @endforeach
+                        </select>
+                        <div id="errKeyword"></div>
                     </div>
                 </div>
                 <div class="col-12">
@@ -153,7 +158,7 @@
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     if (res.code == 200) {
                         $('#addForm')[0].reset();
-                        window.location = "{{ route('blog') }}";
+                        // window.location = "{{ route('blog') }}";
                         return Toast.fire({
                             icon: "success",
                             title: '<b class="text-success">Success:</b> update data success.',

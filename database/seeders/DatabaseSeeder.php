@@ -49,6 +49,29 @@ class DatabaseSeeder extends Seeder
                 'created_at' => Carbon::now()
             ]
         ]);
+     
+        DB::table('master_tags')->insert([
+            [
+                'tag' => 'laravel',
+                'created_at' => Carbon::now()
+            ],
+            [
+                'tag' => 'php',
+                'created_at' => Carbon::now()
+            ],
+            [
+                'tag' => 'software developer',
+                'created_at' => Carbon::now()
+            ],
+            [
+                'tag' => 'github',
+                'created_at' => Carbon::now()
+            ],
+            [
+                'tag' => 'rest api',
+                'created_at' => Carbon::now()
+            ]
+        ]);
 
         DB::table('metas')->insert([
             [
