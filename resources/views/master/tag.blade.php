@@ -34,8 +34,8 @@
             <td class="text-center">{{ $loop->iteration}}. </td>
             <td>{{ $row->tag}}</td>
             <td class="text-center">
-              <a class="btn btn-sm btn-warning mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-tag="{{ $row->tag }}" title="Edit"><i class="fas fa-edit"></i></a>
-              <a class="btn btn-sm btn-danger mt-1 mb-1" id="deleteBtn" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-trash"></i></a>
+              <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-tag="{{ $row->tag }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+              <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="deleteBtn" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-pencil-alt"></i></a>
             </td>
           </tr>
           @endforeach

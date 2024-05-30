@@ -27,8 +27,8 @@ class TagController extends Controller
                 'tag' => 'required|unique:master_tags'
             ],
             [
-                'tag.required' => 'Tag is required',
-                'tag.unique' => 'Data already exist',
+                'tag.required' => 'tag is required',
+                'tag.unique' => 'data already exist',
             ]
         );
         $insert = DB::table('master_tags')->insert([
@@ -50,8 +50,8 @@ class TagController extends Controller
                 'tag' => 'required|unique:master_tags'
             ],
             [
-                'tag.required' => 'Input tidak boleh kosong',
-                'tag.unique' => 'Data already exist',
+                'tag.required' => 'input tidak boleh kosong',
+                'tag.unique' => 'data already exist',
             ]
         );
         $update = DB::table('master_tags')

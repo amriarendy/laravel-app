@@ -50,9 +50,8 @@
                         <td class="text-center">{{ $row->id }}</td>
                         <td class="text-center">{{ $row->date_post }}</td>
                         <td class="text-center">
-                            <a class="btn-circle btn-sm btn-info" href="#" title="Info"><i class="fas fa-info"></i></a>
-                            <a class="btn-circle btn-sm btn-warning" data-toggle="modal" data-target="#editModal" title="Edit"><i class="fas fa-edit"></i></a>
-                            <a class="btn-circle btn-sm btn-danger" href="#" title="Delete"><i class="fas fa-trash"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" data-toggle="modal" data-target="#editModal" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="#" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     @endforeach

@@ -15,26 +15,26 @@ class BlogController extends Controller
     public function index()
     {
         $data = DB::table('blogs')
-        ->leftJoin('users', 'blogs.user_id', '=', 'users.id')
-        ->leftJoin('master_categories', 'blogs.category_id', '=', 'master_categories.id')
-        ->select(
-            'blogs.id',
-            'blogs.title',
-            'blogs.description',
-            'blogs.body',
-            'blogs.image',
-            'blogs.slug',
-            'blogs.date_post',
-            'blogs.category_id',
-            'blogs.created_at',
-            'users.name AS name',
-            'master_categories.category AS category'
-        )
-        ->leftJoin('views', 'blogs.id', '=', 'views.blog_id') // Left join with views table
-        ->selectRaw('COUNT(views.blog_id) AS view_count') // Select the count of views
-        ->groupBy('blogs.id')
-        ->orderBy('blogs.created_at', 'DESC') // Order by created_at column
-        ->get();
+            ->leftJoin('users', 'blogs.user_id', '=', 'users.id')
+            ->leftJoin('master_categories', 'blogs.category_id', '=', 'master_categories.id')
+            ->select(
+                'blogs.id',
+                'blogs.title',
+                'blogs.description',
+                'blogs.body',
+                'blogs.image',
+                'blogs.slug',
+                'blogs.date_post',
+                'blogs.category_id',
+                'blogs.created_at',
+                'users.name AS name',
+                'master_categories.category AS category'
+            )
+            ->leftJoin('views', 'blogs.id', '=', 'views.blog_id') // Left join with views table
+            ->selectRaw('COUNT(views.blog_id) AS view_count') // Select the count of views
+            ->groupBy('blogs.id')
+            ->orderBy('blogs.created_at', 'DESC') // Order by created_at column
+            ->get();
         return view('blog.index', compact('data'));
     }
 
@@ -72,6 +72,8 @@ class BlogController extends Controller
                 'date_post.required' => 'Date is required',
             ]
         );
+        // var_dump("file: " . $request->file('archives'));
+        // die;
         if ($request->croppedImage) {
             $image_parts = explode(";base64,", $request->croppedImage);
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -101,30 +103,27 @@ class BlogController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
         }
-        
+
         $getID = $insert->id;
-        $files = []; // Use an array to store file data
-        if ($request->file('files')) {
-            var_dump("ID: " . $getID . " files: " . $request->file('files')); die;
-            foreach ($request->file('files') as $key => $file) {
-                $originalFilename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $fileName = time() . '_' . Str::slug(pathinfo($originalFilename, PATHINFO_FILENAME)) . '.' . $extension;
-                $filePath = public_path('uploads/thumb' . $fileName);
-                file_put_contents($filePath);
-                // DB::table('archives')->insert([
-                //     'file' => $fileName,
-                //     'sort_by' => "article-file",
-                //     'blog_id' => $getID,
-                // ]);
+        $files = [];
+        if ($request->hasFile('archives')) {
+            foreach ($request->file('archives') as $key => $archive) {
+                $archive = $request->file('archives');
+                $title = $request->title;
+                $fileName = Str::slug(pathinfo(time() . "_" . $title, PATHINFO_FILENAME), '-') . '.' . $archive->getClientOriginalExtension();
+                $path = 'public/uploads/files';
+                $archive->move($path, $fileName);
                 $files[] = [
                     'file' => $fileName,
                     'sort_by' => "article-file",
                     'blog_id' => $getID,
                 ];
             }
+
+            // Insert file information into the database
             DB::table('archives')->insert($files);
         }
+
 
         $tags = $request->tag;
         if ($tags) {
@@ -135,11 +134,11 @@ class BlogController extends Controller
                 ]);
             }
         }
-        
+
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => 'Success create data',
+            'message' => $request->hasFile('files'),
         ]);
     }
 

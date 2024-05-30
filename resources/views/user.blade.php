@@ -3,7 +3,7 @@
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800 font-weight-bold"><i class="fas fa-code-branch"></i> Category</h1>
+    <h1 class="h3 mb-0 text-gray-800 font-weight-bold"><i class="fas fa-users"></i> Data Users</h1>
 </div>
 
 <!-- Content Row -->
@@ -17,25 +17,28 @@
                 <thead>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Category</th>
-                        <th class="text-center">Action</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Category</th>
-                        <th class="text-center">Action</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @foreach ($data as $row)
                     <tr>
                         <td class="text-center">{{ $loop->iteration}}. </td>
-                        <td class="text-center">{{ $row->category}}</td>
+                        <td>{{ $row->email}}</td>
+                        <td>{{ $row->name}}</td>
                         <td class="text-center">
-                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-category="{{ $row->category }}" data-slug="{{ $row->slug }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="deleteBtn" href="" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-name="{{ $row->name }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="deleteBtn" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     @endforeach
@@ -59,21 +62,29 @@
                 <div class="modal-body">
                     @csrf
                     <div class="form-group">
-                        <label for="category" class="col-form-label font-weight-bold">Category:</label>
-                        <input type="text" class="form-control title" name="category">
-                        <div id="errAddCategory"></div>
+                        <label for="email" class="col-form-label font-weight-bold">Email:</label>
+                        <input type="text" class="form-control" name="email" />
+                        <div id="errAddEmail"></div>
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-bold" for="slug">Slug <span style="color: red;">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <input class="checkboxSlug" type="checkbox" />
-                                </span>
-                            </div>
-                            <input type="text" class="form-control slug" name="slug" maxlength="100" readonly>
-                        </div>
-                        <div id="errAddSlug"></div>
+                        <label for="name" class="col-form-label font-weight-bold">Full Name:</label>
+                        <input type="text" class="form-control" name="name" />
+                        <div id="errAddName"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-form-label font-weight-bold">Password:</label>
+                        <input type="text" class="form-control" name="password" />
+                        <div id="errAddPassword"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password_confirm" class="col-form-label font-weight-bold">Password Confirm:</label>
+                        <input type="text" class="form-control" name="password_confirm" />
+                        <div id="errAddPasswordConfirm"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="picture" class="col-form-label font-weight-bold">Picture:</label>
+                        <input type="file" class="form-control" name="picture" />
+                        <div id="errAddPicture"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -102,24 +113,22 @@
                 <div class="modal-body">
                     <div class="form-group">
                         @csrf
-                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id" id="id" required>
                     </div>
                     <div class="form-group">
-                        <label for="category" class="col-form-label font-weight-bold">Category:</label>
-                        <input type="text" class="form-control title" id="category" name="category">
-                        <div id="errEditCategory"></div>
+                        <label for="email" class="col-form-label font-weight-bold">Email:</label>
+                        <input type="text" class="form-control" name="email" />
+                        <div id="errEditEmail"></div>
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-bold" for="slug">Slug <span style="color: red;">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <input class="checkboxSlug" type="checkbox" />
-                                </span>
-                            </div>
-                            <input type="text" class="form-control slug" id="slug" name="slug" value="" maxlength="100" readonly>
-                        </div>
-                        <div id="errEditSlug"></div>
+                        <label for="name" class="col-form-label font-weight-bold">Full Name:</label>
+                        <input type="text" class="form-control" name="name" />
+                        <div id="errEditName"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="picture" class="col-form-label font-weight-bold">Picture:</label>
+                        <input type="file" class="form-control" name="picture" />
+                        <div id="errEditPicture"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -133,6 +142,7 @@
     </div>
 </div>
 <!-- ./Modal Edit -->
+
 <script>
     $.ajaxSetup({
         headers: {
@@ -145,8 +155,8 @@
         $(document).on('submit', '#addForm', function(e) {
             e.preventDefault();
             $.ajax({
-                url: "{{ route('category.store') }}",
-                method: 'POST',
+                url: "{{ route('users.store') }}",
+                type: 'POST',
                 data: new FormData(this),
                 contentType: false,
                 processData: false,
@@ -154,46 +164,44 @@
                     $("#pageloader").fadeOut();
                     $(".btn .fa-spinner").hide();
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
-                    if (res.code == 200) {
-                        $('#addModal').modal('hide');
-                        $('#addForm')[0].reset();
-                        $('.table').load(location.href + ' .table');
-                        return Toast.fire({
-                            icon: "success",
-                            title: '<b class="text-success">Success:</b> create data success.',
-                        });
-                    }
+                    $('#addForm')[0].reset();
+                    window.location = "{{ route('users') }}";
+                    return Toast.fire({
+                        icon: res.status,
+                        title: res.message
+                    });
                 },
                 error: function(err) {
                     let error = err.responseJSON;
-                    let errorCategory = error.errors.category;
-                    let errorSlug = error.errors.slug;
-                    console.log(errorSlug);
-                    $('#errAddCategory').append(errorCategory && !$('#errAddCategory').text().includes(errorCategory) ? '<span class="text-danger">' + errorCategory + '</span><br/>' : '');
-                    $('#errAddSlug').append(errorSlug && !$('#errAddSlug').text().includes(errorSlug) ? '<span class="text-danger">' + errorSlug + '</span><br/>' : '');
+                    let errorEmail = error.errors.email;
+                    let errorName = error.errors.name;
+                    let errorPassword = error.errors.password;
+                    let errorPasswordConfirm = error.errors.password_confirm;
+                    $('#errAddEmail').append(errorEmail && !$('#errAddEmail').text().includes(errorEmail) ? '<span class="text-danger">' + errorEmail + '</span><br/>' : '');
+                    $('#errAddName').append(errorName && !$('#errAddName').text().includes(errorName) ? '<span class="text-danger">' + errorName + '</span><br/>' : '');
+                    $('#errAddPassword').append(errorPassword && !$('#errAddPassword').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
+                    $('#errAddPasswordConfirm').append(errorPasswordConfirm && !$('#errAddPasswordConfirm').text().includes(errorPasswordConfirm) ? '<span class="text-danger">' + errorPasswordConfirm + '</span><br/>' : '');
                     $("#pageloader").fadeOut();
                     $(".btn .fa-spinner").hide();
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     return Toast.fire({
                         icon: "error",
-                        title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+                        title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.'
                     });
                 }
-            });
+            })
         })
 
         /* Edit Data */
         $(document).on('click', '#editData', function() {
             let id = $(this).data('id');
-            let category = $(this).data('category');
-            let slug = $(this).data('slug');
+            let tag = $(this).data('tag');
             $('#id').val(id);
-            $('#category').val(category);
-            $('#slug').val(slug);
+            $('#tag').val(tag);
             $(document).on('submit', '#editForm', function(e) {
                 e.preventDefault();
                 $.ajax({
-                    url: "{{ route('category.update') }}",
+                    url: "{{ route('users.update') }}",
                     method: 'POST',
                     data: new FormData(this),
                     contentType: false,
@@ -214,11 +222,8 @@
                     },
                     error: function(err) {
                         let error = err.responseJSON;
-                        let errorCategory = error.errors.category;
-                        let errorSlug = error.errors.slug;
-                        console.log(errorSlug);
-                        $('#errEditCategory').append(errorCategory && !$('#errEditCategory').text().includes(errorCategory) ? '<span class="text-danger">' + errorCategory + '</span><br/>' : '');
-                        $('#errEditSlug').append(errorSlug && !$('#errEditSlug').text().includes(errorSlug) ? '<span class="text-danger">' + errorSlug + '</span><br/>' : '');
+                        let errorTag = error.errors.tag;
+                        $('#errEditTag').append(errorTag && !$('#errEditTag').text().includes(errorTag) ? '<span class="text-danger">' + errorTag + '</span><br/>' : '');
                         $("#pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();
                         $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
@@ -237,7 +242,7 @@
             let id = $(this).data('id');
             if (confirm('Apakah yakin untuk menghapus data?')) {
                 $.ajax({
-                    url: "{{ route('category.delete') }}",
+                    url: "{{ route('users.delete') }}",
                     method: 'POST',
                     data: {
                         id: id,

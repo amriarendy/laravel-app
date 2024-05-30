@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Master\TagController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard/users', [UserController::class, 'index'])->name('users');
+    Route::post('/dashboard/users/store', [UserController::class, 'store'])->name('users.store');
+    Route::post('/dashboard/users/update', [UserController::class, 'update'])->name('users.update');
+    Route::post('/dashboard/users/delete', [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/dashboard/master/tag', [TagController::class, 'index'])->name('tag');
     Route::post('/dashboard/master/tag/store', [TagController::class, 'store'])->name('tag.store');
     Route::post('/dashboard/master/tag/update', [TagController::class, 'update'])->name('tag.update');

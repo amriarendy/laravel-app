@@ -192,7 +192,7 @@
                 <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Users:</h6>
-                        <a class="collapse-item" href="{{route('/')}}">Users Data</a>
+                        <a class="collapse-item" href="{{route('users')}}">Users Data</a>
                     </div>
                 </div>
             </li>

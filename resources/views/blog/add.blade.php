@@ -8,6 +8,7 @@
 
 <!-- Content Row -->
 <form class="form" action="" id="addForm" name="addForm" method="POST" enctype="multipart/form-data">
+    @csrf
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="row">
@@ -46,9 +47,9 @@
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label class="font-weight-bold" for="files">File</label>
-                        <input type="file" class="form-control" id="files" name="files[]" multiple="multiple" placeholder="file: ">
-                        <div id="errFiles"></div>
+                        <label class="font-weight-bold" for="archives">File</label>
+                        <input type="file" class="form-control" id="archives" name="archives[]" multiple="multiple" placeholder="file: " />
+                        <div id="errArchives"></div>
                     </div>
                 </div>
                 <div class="col-6">
@@ -172,7 +173,7 @@
                     let errorCategory = error.errors.category;
                     let errorBody = error.errors.body;
                     let errorImage = error.errors.image;
-                    let errorFiles = error.errors.files;
+                    let errorArchives = error.errors.archives;
                     let errorSlug = error.errors.slug;
                     let errorDatePost = error.errors.date_post;
                     $('#errTitle').append(errorTitle && !$('#errTitle').text().includes(errorTitle) ? '<span class="text-danger">' + errorTitle + '</span><br/>' : '');
@@ -180,7 +181,7 @@
                     $('#errCategory').append(errorCategory && !$('#errCategory').text().includes(errorCategory) ? '<span class="text-danger">' + errorCategory + '</span><br/>' : '');
                     $('#errBody').append(errorBody && !$('#errBody').text().includes(errorBody) ? '<span class="text-danger">' + errorBody + '</span><br/>' : '');
                     $('#errImage').append(errorImage && !$('#errImage').text().includes(errorImage) ? '<span class="text-danger">' + errorImage + '</span><br/>' : '');
-                    $('#errFiles').append(errorFiles && !$('#errFiles').text().includes(errorFiles) ? '<span class="text-danger">' + errorFiles + '</span><br/>' : '');
+                    $('#errArchives').append(errorArchives && !$('#errArchives').text().includes(errorArchives) ? '<span class="text-danger">' + errorArchives + '</span><br/>' : '');
                     $('#errSlug').append(errorSlug && !$('#errSlug').text().includes(errorSlug) ? '<span class="text-danger">' + errorSlug + '</span><br/>' : '');
                     $('#errDatePost').append(errorDatePost && !$('#errDatePost').text().includes(errorDatePost) ? '<span class="text-danger">' + errorDatePost + '</span><br/>' : '');
                     $("#pageloader").fadeOut();

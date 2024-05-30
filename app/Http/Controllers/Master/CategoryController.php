@@ -30,9 +30,9 @@ class CategoryController extends Controller
                 'slug' => 'required|unique:master_categories',
             ],
             [
-                'category.required' => 'Category is required',
-                'slug.required' => 'Slug is required',
-                'slug.unique' => 'Data already exist'
+                'category.required' => 'category is required',
+                'slug.required' => 'slug is required',
+                'slug.unique' => 'data already exist'
             ]
         );
         $insert = DB::table('master_categories')->insert([
@@ -56,8 +56,8 @@ class CategoryController extends Controller
                 'slug' => 'required|unique:master_categories',
             ],
             [
-                'category.required' => 'Input tidak boleh kosong',
-                'slug.required' => 'Slug is required',
+                'category.required' => 'input tidak boleh kosong',
+                'slug.required' => 'slug is required',
             ]
         );
         $update = DB::table('master_categories')
