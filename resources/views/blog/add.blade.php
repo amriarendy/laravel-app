@@ -39,7 +39,7 @@
                         <select class="form-control" name="category">
                             <option value="">-Choose Category-</option>
                             @foreach ($categories as $row)
-                            <option value="{{ $row->id }}">{{ $row->category }}</option>
+                            <option value="{{ $row->category }}">{{ $row->category }}</option>
                             @endforeach
                         </select>
                         <div id="errCategory"></div>
@@ -159,7 +159,7 @@
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     if (res.code == 200) {
                         $('#addForm')[0].reset();
-                        // window.location = "{{ route('blog') }}";
+                        window.location = "{{ route('blog') }}";
                         return Toast.fire({
                             icon: "success",
                             title: '<b class="text-success">Success:</b> update data success.',

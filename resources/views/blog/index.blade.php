@@ -18,7 +18,6 @@
                 <thead>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Thumbnail</th>
                         <th class="text-center">Title</th>
                         <th class="text-center">Category</th>
                         <th class="text-center">Writter</th>
@@ -30,7 +29,6 @@
                 <tfoot>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Thumbnail</th>
                         <th class="text-center">Title</th>
                         <th class="text-center">Category</th>
                         <th class="text-center">Writter</th>
@@ -43,14 +41,13 @@
                     @foreach ($data as $row)
                     <tr>
                         <td class="text-center">{{ $loop->iteration}}. </td>
-                        <td>{{ $row->image }}</td>
                         <td>{{ $row->title }}</td>
                         <td class="text-center">{{ $row->category }}</td>
                         <td class="text-center">{{ $row->name }}</td>
                         <td class="text-center">{{ $row->id }}</td>
                         <td class="text-center">{{ $row->date_post }}</td>
                         <td class="text-center">
-                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" data-toggle="modal" data-target="#editModal" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="{{ route('blog.edit', encrypt($row->id)) }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                             <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="#" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>

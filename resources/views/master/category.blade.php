@@ -247,7 +247,7 @@
                             $('.table').load(location.href + ' .table');
                             return Toast.fire({
                                 icon: "success",
-                                title: '<b class="text-success">Success:</b> update data success.',
+                                title: '<b class="text-success">Success:</b> delete data success.',
                             });
                         }
                     }

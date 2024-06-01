@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\Archive;
 use App\Models\Blog;
+use DOMDocument;
 
 class BlogController extends Controller
 {
@@ -72,15 +73,14 @@ class BlogController extends Controller
                 'date_post.required' => 'Date is required',
             ]
         );
-        // var_dump("file: " . $request->file('archives'));
-        // die;
+
         if ($request->croppedImage) {
             $image_parts = explode(";base64,", $request->croppedImage);
             $image_type_aux = explode("image/", $image_parts[0]);
             $image_type = $image_type_aux[1];
             $image_base64 = base64_decode($image_parts[1]);
-            $imageName = uniqid() . '_' . Str::slug(pathinfo($request->title, PATHINFO_FILENAME), '-') . '.png';
-            $filePath = public_path('uploads/thumb' . $imageName);
+            $imageName = Str::slug(pathinfo($request->title, PATHINFO_FILENAME)) . '-' .  Str::random(5) . '.png';
+            $filePath = public_path('uploads/thumb/' . $imageName);
             file_put_contents($filePath, $image_base64);
             $insert = Blog::create([
                 'title' => $request->title,
@@ -104,32 +104,31 @@ class BlogController extends Controller
             ]);
         }
 
-        $getID = $insert->id;
+        $blogID = $insert->id;
         $files = [];
         if ($request->hasFile('archives')) {
-            foreach ($request->file('archives') as $key => $archive) {
-                $archive = $request->file('archives');
+            $archive = $request->file('archives');
+            foreach ($archive as $file) {
                 $title = $request->title;
-                $fileName = Str::slug(pathinfo(time() . "_" . $title, PATHINFO_FILENAME), '-') . '.' . $archive->getClientOriginalExtension();
-                $path = 'public/uploads/files';
-                $archive->move($path, $fileName);
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $fileName = Str::slug(pathinfo($filename, PATHINFO_FILENAME)) . "-" . time() . "." . $extension;
+                $destinationPath = 'uploads/files' . '/';
+                $file->move($destinationPath, $fileName);
                 $files[] = [
                     'file' => $fileName,
                     'sort_by' => "article-file",
-                    'blog_id' => $getID,
+                    'blog_id' => $blogID,
                 ];
             }
-
-            // Insert file information into the database
             DB::table('archives')->insert($files);
         }
-
 
         $tags = $request->tag;
         if ($tags) {
             foreach ($tags as $tag) {
                 DB::table('keywords')->insert([
-                    'blog_id' => $getID,
+                    'blog_id' => $blogID,
                     'tag' => $tag,
                 ]);
             }
@@ -143,8 +142,83 @@ class BlogController extends Controller
     }
 
 
-    public function edit()
+    public function edit(Request $request, $param)
     {
-        return view('blog.edit');
+        $data = DB::table('blogs')
+            ->leftJoin('users', 'blogs.user_id', '=', 'users.id')
+            ->select(
+                'blogs.id as id',
+                'blogs.title',
+                'blogs.description',
+                'blogs.body',
+                'blogs.image',
+                'blogs.slug',
+                'blogs.date_post',
+                'blogs.category_id',
+                'users.name',
+            )
+            ->where('blogs.id', decrypt($param))
+            ->first();
+        $categories = DB::table('master_categories')
+            ->select('id', 'category')->orderBy('created_at', 'desc')
+            ->get();
+        $tags = DB::table('master_tags')
+            ->select('tag')->orderBy('created_at', 'desc')
+            ->get();
+        $archives = DB::table('archives')
+            ->select('file', 'id', 'blog_id')
+            ->where('blog_id', decrypt($param))->orderBy('created_at', 'desc')
+            ->get();
+        $keywords = DB::table('keywords')
+            ->select('id', 'tag', 'blog_id')
+            ->where('blog_id', decrypt($param))
+            ->get();
+        return view('blog.edit', compact('data', 'categories', 'keywords', 'archives', 'tags'));
+    }
+
+    function delete_file($param)
+    {
+        if ($param) {
+            $data = DB::table('archives')->where('id', $param)->first();
+            $picturePath = 'uploads/files/' . $data->file;
+            if (File::exists($picturePath)) {
+                File::delete($picturePath);
+                DB::table('archives')->where('id', $param)->delete();
+            }
+        }
+        return response()->json(['success' => true, 'li' => 'li_' . $param]);
+    }
+
+    function image_upload(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = Str::slug(pathinfo(time(), PATHINFO_FILENAME), '-') . '.' . $image->getClientOriginalExtension();
+            $path = 'uploads/posts/';
+            $image->move(public_path($path), $imageName); // Use public_path() to get the full server path
+            $imageUrl = url($path . $imageName); // Generate full URL using url() helper
+            return response()->json(['url' => $imageUrl]);
+        }
+        return response()->json(['error' => 'No image uploaded.'], 400);
+    }
+
+    function image_delete(Request $request)
+    {
+        $filename = $request->input('filename');
+        $path = 'public/posts/' . $filename;
+        if ($filename && Storage::exists($path)) {
+            Storage::delete($path);
+
+            return response()->json([
+                'code' => 201,
+                'status' => 'success',
+                'message' => 'Image deleted successfully.'
+            ]);
+        }
+        return response()->json([
+            'code' => 400,
+            'status' => 'error',
+            'message' => 'Image not found or already deleted.'
+        ]);
     }
 }

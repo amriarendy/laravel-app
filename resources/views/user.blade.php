@@ -37,7 +37,8 @@
                         <td>{{ $row->email}}</td>
                         <td>{{ $row->name}}</td>
                         <td class="text-center">
-                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-name="{{ $row->name }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="passData" data-toggle="modal" data-target="#passwordModal" data-id="{{ $row->id }}" title="Change Password"><i class="fas fa-key"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="editData" data-toggle="modal" data-target="#editModal" data-id="{{ $row->id }}" data-name="{{ $row->name }}" data-email="{{ $row->email }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                             <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="deleteBtn" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
@@ -117,12 +118,12 @@
                     </div>
                     <div class="form-group">
                         <label for="email" class="col-form-label font-weight-bold">Email:</label>
-                        <input type="text" class="form-control" name="email" />
+                        <input type="text" class="form-control" id="email" name="email" />
                         <div id="errEditEmail"></div>
                     </div>
                     <div class="form-group">
                         <label for="name" class="col-form-label font-weight-bold">Full Name:</label>
-                        <input type="text" class="form-control" name="name" />
+                        <input type="text" class="form-control" id="name" name="name" />
                         <div id="errEditName"></div>
                     </div>
                     <div class="form-group">
@@ -142,6 +143,46 @@
     </div>
 </div>
 <!-- ./Modal Edit -->
+
+<!-- Modal Change Password -->
+<div class="modal fade" id="passwordModal" aria-labelledby="passwordModalLabel" role="dialog" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form" action="" id="passForm" name="passForm" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="passwordModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @csrf
+                    <div class="form-group">
+                        @csrf
+                        <input type="hidden" name="id" id="id_pass" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-form-label font-weight-bold">Password:</label>
+                        <input type="text" class="form-control" name="password" />
+                        <div id="errPassChg"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password_confirm" class="col-form-label font-weight-bold">Password Confirm:</label>
+                        <input type="text" class="form-control" name="password_confirm" />
+                        <div id="errPassChgConfirm"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary font-weight-bold closeBtn" data-dismiss="modal">Close</button>
+                    <button type="submit" id="chgPasswordBtn" class="btn btn-primary font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                        <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- ./Modal Change Password -->
 
 <script>
     $.ajaxSetup({
@@ -195,9 +236,11 @@
         /* Edit Data */
         $(document).on('click', '#editData', function() {
             let id = $(this).data('id');
-            let tag = $(this).data('tag');
+            let name = $(this).data('name');
+            let email = $(this).data('email');
             $('#id').val(id);
-            $('#tag').val(tag);
+            $('#name').val(name);
+            $('#email').val(email);
             $(document).on('submit', '#editForm', function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -222,8 +265,10 @@
                     },
                     error: function(err) {
                         let error = err.responseJSON;
-                        let errorTag = error.errors.tag;
-                        $('#errEditTag').append(errorTag && !$('#errEditTag').text().includes(errorTag) ? '<span class="text-danger">' + errorTag + '</span><br/>' : '');
+                        let errorEmail = error.errors.email;
+                        let errorName = error.errors.name;
+                        $('#errEditEmail').append(errorEmail && !$('#errEditEmail').text().includes(errorEmail) ? '<span class="text-danger">' + errorEmail + '</span><br/>' : '');
+                        $('#errEditName').append(errorName && !$('#errEditName').text().includes(errorName) ? '<span class="text-danger">' + errorName + '</span><br/>' : '');
                         $("#pageloader").fadeOut();
                         $(".btn .fa-spinner").hide();
                         $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
@@ -252,12 +297,55 @@
                             $('.table').load(location.href + ' .table');
                             return Toast.fire({
                                 icon: "success",
-                                title: '<b class="text-success">Success:</b> update data success.',
+                                title: '<b class="text-success">Success:</b> delete data success.',
                             });
                         }
                     }
                 });
             }
+        });
+
+        /* Edit Password */
+        $(document).on('click', '#passData', function() {
+            let id = $(this).data('id');
+            $('#id_pass').val(id);
+            $(document).on('submit', '#passForm', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "{{ route('users.update.password') }}",
+                    type: 'POST',
+                    data: new FormData(this),
+                    contentType: false,
+                    processData: false,
+                    success: function(res) {
+                        if (res.code == 200) {
+                            $("#pageloader").fadeOut();
+                            $(".btn .fa-spinner").hide();
+                            $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                            $('#passForm')[0].reset();
+                            window.location = "{{ route('users') }}";
+                            return Toast.fire({
+                                icon: res.status,
+                                title: res.message
+                            });
+                        }
+                    },
+                    error: function(err) {
+                        let error = err.responseJSON;
+                        let errorPassword = error.errors.password;
+                        let errorPasswordConfirm = error.errors.password_confirm;
+                        $('#errPassChg').append(errorPassword && !$('#errPassChg').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
+                        $('#errPassChgConfirm').append(errorPasswordConfirm && !$('#errPassChgConfirm').text().includes(errorPasswordConfirm) ? '<span class="text-danger">' + errorPasswordConfirm + '</span><br/>' : '');
+                        $("#pageloader").fadeOut();
+                        $(".btn .fa-spinner").hide();
+                        $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                        return Toast.fire({
+                            icon: "error",
+                            title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.'
+                        });
+                    }
+                });
+            });
         });
     });
 </script>

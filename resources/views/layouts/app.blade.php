@@ -390,7 +390,7 @@
             var data = new FormData();
             data.append("image", image);
             $.ajax({
-                url: "{{ route('/') }}",
+                url: "{{ route('image.upload') }}",
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -410,7 +410,7 @@
             var filename = src.split('/').pop();
             $.ajax({
                 type: 'POST',
-                url: "{{ route('/') }}",
+                url: "{{ route('image.delete') }}",
                 data: {
                     filename: filename,
                     _token: '{{ csrf_token() }}'
