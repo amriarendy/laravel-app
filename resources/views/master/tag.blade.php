@@ -136,7 +136,8 @@
             $('.table').load(location.href + ' .table');
             return Toast.fire({
               icon: "success",
-              title: '<b class="text-success">Success:</b> create data success.',
+              title: '<b class="text-success">Success</b>',
+              text: "success create data!",
             });
           }
         },
@@ -149,7 +150,8 @@
           $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
           return Toast.fire({
             icon: "error",
-            title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+            title: '<b class="text-danger">Unprocessable Content</b>',
+            text: "unable to be followed due to semantic errors.",
           });
         }
       });
@@ -179,7 +181,8 @@
               $('.table').load(location.href + ' .table');
               return Toast.fire({
                 icon: "success",
-                title: '<b class="text-success">Success:</b> update data success.',
+                title: '<b class="text-success">Success</b>',
+                text: "success update data!",
               });
             }
           },
@@ -192,7 +195,8 @@
             $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
             return Toast.fire({
               icon: "error",
-              title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+              title: '<b class="text-danger">Unprocessable Content</b>',
+              text: "unable to be followed due to semantic errors.",
             });
           }
         });
@@ -203,7 +207,7 @@
     $(document).on('click', '#deleteBtn', function(e) {
       e.preventDefault();
       let id = $(this).data('id');
-      if (confirm('Apakah yakin untuk menghapus data?')) {
+      if (confirm('Are you sure to delete it?')) {
         $.ajax({
           url: "{{ route('tag.delete') }}",
           method: 'POST',
@@ -215,7 +219,8 @@
               $('.table').load(location.href + ' .table');
               return Toast.fire({
                 icon: "success",
-                title: '<b class="text-success">Success:</b> delete data success.',
+                title: '<b class="text-success">Success:</b>',
+                text: "you won't be able to revert this!",
               });
             }
           }

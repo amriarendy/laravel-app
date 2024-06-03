@@ -416,7 +416,10 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(res) {
-                    return toastr[res.status](res.status, res.message);
+                    return Toast.fire({
+                        icon: res.status,
+                        title: res.message,
+                    });
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     console.error('Error deleting image: ' + textStatus);

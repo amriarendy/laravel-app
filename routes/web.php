@@ -52,6 +52,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
     Route::post('/dashboard/blog/update', [BlogController::class, 'update'])->name('blog.update');
     Route::post('/dashboard/blog/delete', [BlogController::class, 'destroy'])->name('blog.delete');
+    // setting
+    Route::get('/dashboard/setting', [SettingController::class, 'index'])->name('setting');
+    Route::get('/dashboard/meta/update', [SettingController::class, 'update'])->name('meta.update');
+    Route::get('/dashboard/favicon/update', [SettingController::class, 'favicon'])->name('favicon.update');
+    Route::get('/dashboard/image/update', [SettingController::class, 'image'])->name('image.update');
     // feature
     Route::post('/dashboard/image-upload', [BlogController::class, 'image_upload'])->name('image.upload');
     Route::post('/dashboard/image-delete', [BlogController::class, 'image_delete'])->name('image.delete');

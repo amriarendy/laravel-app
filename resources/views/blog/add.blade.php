@@ -162,7 +162,8 @@
                         window.location = "{{ route('blog') }}";
                         return Toast.fire({
                             icon: "success",
-                            title: '<b class="text-success">Success:</b> update data success.',
+                            title: '<b class="text-success">Success</b>',
+                            text: "success create data!",
                         });
                     }
                 },
@@ -189,7 +190,8 @@
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     return Toast.fire({
                         icon: "error",
-                        title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+                        title: '<b class="text-danger">Unprocessable Content</b>',
+                        text: "unable to be followed due to semantic errors.",
                     });
                 }
             })
@@ -227,7 +229,11 @@
                         'min': 0.5000,
                         'max': 1.5000
                     });
-                    return toastr['success']("jQuery bind complete");
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "jQuery bind complete.",
+                    });
                     console.log('jQuery bind complete')
                 })
             }

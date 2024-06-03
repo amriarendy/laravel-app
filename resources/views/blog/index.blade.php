@@ -48,7 +48,7 @@
                         <td class="text-center">{{ $row->date_post }}</td>
                         <td class="text-center">
                             <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="{{ route('blog.edit', encrypt($row->id)) }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="#" title="Delete"><i class="fas fa-trash"></i></a>
+                            <a class="btn-circle btn-sm btn-dark mt-1 mb-1" id="deleteData" href="" data-id="{{ $row->id }}" title="Delete"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                     @endforeach
@@ -58,4 +58,38 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        /* Delete Data */
+        $(document).on('click', '#deleteData', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            console.log(id);
+            if (confirm('Are you sure to delete it?')) {
+                $.ajax({
+                    url: "{{ route('blog.delete') }}",
+                    method: 'POST',
+                    data: {
+                        id: id,
+                    },
+                    success: function(res) {
+                        if (res.code == 200) {
+                            $('.table').load(location.href + ' .table');
+                            return Toast.fire({
+                                icon: "error",
+                                title: '<b class="text-success">Success</b>',
+                                text: "you won't be able to revert this!",
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
 @endsection

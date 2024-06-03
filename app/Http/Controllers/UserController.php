@@ -47,7 +47,7 @@ class UserController extends Controller
             $picture = $request->file('picture');
             $email = $request->email;
             $pictureName = Str::slug(pathinfo(time() . "_" . $email, PATHINFO_FILENAME), '-') . '.' . $picture->getClientOriginalExtension();
-            $path = 'public/uploads/picture';
+            $path = 'uploads/picture';
             $picture->move($path, $pictureName);
         } else {
             $pictureName =  null;
@@ -85,12 +85,12 @@ class UserController extends Controller
             $picture = $request->file('picture');
             $email = $request->email;
             $data = DB::table('users')->where('id', $request->input('id'))->first();
-            $picturePath = 'public/uploads/picture/' . $data->picture;
+            $picturePath = 'uploads/picture/' . $data->picture;
             if (File::exists($picturePath)) {
                 File::delete($picturePath);
             }
             $pictureName = Str::slug(pathinfo(time() . "_" . $email, PATHINFO_FILENAME), '-') . '.' . $picture->getClientOriginalExtension();
-            $path = 'public/uploads/picture';
+            $path = 'uploads/picture';
             $picture->move($path, $pictureName);
         } else {
             $pictureName =  null;
@@ -117,7 +117,7 @@ class UserController extends Controller
             abort(404);
         }
         $data = DB::table('users')->where('id', $request->input('id'))->first();
-        $picturePath = 'public/uploads/picture/' . $data->picture;
+        $picturePath = 'uploads/picture/' . $data->picture;
         if (File::exists($picturePath)) {
             File::delete($picturePath);
         }

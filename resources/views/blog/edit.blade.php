@@ -8,11 +8,16 @@
 </div>
 
 <!-- Content Row -->
-<form class="form" action="" id="addForm" name="addForm" method="POST" enctype="multipart/form-data">
+<form class="form" action="" id="editForm" name="editForm" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <input type="hidden" name="id" value="{{ $data->id }}" />
+                    </div>
+                </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label class="font-weight-bold" for="title">Title <span style="color: red;">*</span></label>
@@ -38,7 +43,7 @@
                     <div class="form-group">
                         <label class="font-weight-bold" for="category">Category <span style="color: red;">*</span></label>
                         <select class="form-control" name="category">
-                            <option value="{{ $data->category_id }}">-{{ $data->category_id }}-</option>
+                            <option value="{{ $data->category_id }}">{{ $data->category_id }}</option>
                             @foreach ($categories as $row)
                             <option value="{{ $row->category }}">{{ $row->category }}</option>
                             @endforeach
@@ -113,7 +118,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="submit" id="addBtn" class="btn btn-primary btn-block font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+            <button type="submit" id="editBtn" class="btn btn-primary btn-block font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
                 <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
             </button>
         </div>
@@ -182,13 +187,13 @@
 
 <script>
     $(document).ready(function() {
-        $('#addForm').on('submit', function(e) {
+        $('#editForm').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
             /* Add the cropped image data to the form data */
             formData.append('croppedImage', $('#croppedImage').val());
             $.ajax({
-                url: "{{ route('blog.store') }}",
+                url: "{{ route('blog.update') }}",
                 type: 'POST',
                 data: new FormData(this),
                 contentType: false,
@@ -198,11 +203,12 @@
                     $(".btn .fa-spinner").hide();
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     if (res.code == 200) {
-                        $('#addForm')[0].reset();
+                        $('#editForm')[0].reset();
                         window.location = "{{ route('blog') }}";
                         return Toast.fire({
                             icon: "success",
-                            title: '<b class="text-success">Success:</b> update data success.',
+                            title: '<b class="text-success">Success</b>',
+                            text: "success update data!",
                         });
                     }
                 },
@@ -229,7 +235,8 @@
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     return Toast.fire({
                         icon: "error",
-                        title: '<b class="text-danger">Unprocessable Content:</b> unable to be followed due to semantic errors.',
+                        title: '<b class="text-danger">Unprocessable Content</b>',
+                        text: "unable to be followed due to semantic errors.",
                     });
                 }
             })
@@ -296,7 +303,6 @@
             })
             $.ajax({
                 url: '/dashboard/file-delete/' + id,
-                // url: "{{ route('file.delete', $row->id) }}",
                 type: 'DELETE',
                 success: function(result) {
                     $("#" + result['li']).slideUp("slow")
