@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
@@ -91,6 +90,8 @@ class BlogController extends Controller
                 'date_post' => $request->date_post,
                 'category_id' => $request->category,
                 'user_id' => Auth::user()->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
             ]);
         } else {
             $insert = Blog::create([
@@ -101,6 +102,8 @@ class BlogController extends Controller
                 'date_post' => $request->date_post,
                 'category_id' => $request->category,
                 'user_id' => Auth::user()->id,
+                'created_at' => Carbon::now()->toDateTimeString(),
+                'updated_at' => Carbon::now()->toDateTimeString(),
             ]);
         }
 
@@ -119,6 +122,8 @@ class BlogController extends Controller
                     'file' => $fileName,
                     'sort_by' => "article-file",
                     'blog_id' => $blogID,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
                 ];
             }
             DB::table('archives')->insert($files);
@@ -130,6 +135,8 @@ class BlogController extends Controller
                 DB::table('keywords')->insert([
                     'blog_id' => $blogID,
                     'tag' => $tag,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
                 ]);
             }
         }
@@ -137,7 +144,7 @@ class BlogController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => $request->hasFile('files'),
+            'message' => 'Success create data',
         ]);
     }
 
@@ -204,7 +211,7 @@ class BlogController extends Controller
                     'date_post.required' => 'Date is required',
                 ]
             );
-            
+
             if ($request->croppedImage) {
                 if (File::exists('uploads/thumb/' . $where->image)) {
                     File::delete('uploads/thumb/' . $where->image);
@@ -217,31 +224,33 @@ class BlogController extends Controller
                 $filePath = public_path('uploads/thumb/' . $imageName);
                 file_put_contents($filePath, $image_base64);
                 $update = DB::table('blogs')
-                ->where('id', $param)
-                ->update([
-                    'title' => $request->title,
-                    'description' => $request->description,
-                    'body' => $request->body,
-                    'image' => $imageName ?? null, // Use $imageName if available
-                    'slug' => $request->slug,
-                    'date_post' => $request->date_post,
-                    'category_id' => $request->category,
-                    'user_id' => Auth::user()->id,
-                ]);
+                    ->where('id', $param)
+                    ->update([
+                        'title' => $request->title,
+                        'description' => $request->description,
+                        'body' => $request->body,
+                        'image' => $imageName ?? null, // Use $imageName if available
+                        'slug' => $request->slug,
+                        'date_post' => $request->date_post,
+                        'category_id' => $request->category,
+                        'user_id' => Auth::user()->id,
+                        'updated_at' => Carbon::now()->toDateTimeString(),
+                    ]);
             } else {
                 $update = DB::table('blogs')
-                ->where('id', $param)
-                ->update([
-                    'title' => $request->title,
-                    'description' => $request->description,
-                    'body' => $request->body,
-                    'slug' => $request->slug,
-                    'date_post' => $request->date_post,
-                    'category_id' => $request->category,
-                    'user_id' => Auth::user()->id,
-                ]);
+                    ->where('id', $param)
+                    ->update([
+                        'title' => $request->title,
+                        'description' => $request->description,
+                        'body' => $request->body,
+                        'slug' => $request->slug,
+                        'date_post' => $request->date_post,
+                        'category_id' => $request->category,
+                        'user_id' => Auth::user()->id,
+                        'updated_at' => Carbon::now()->toDateTimeString(),
+                    ]);
             }
-            
+
             $files = [];
             if ($request->hasFile('archives')) {
                 $archive = $request->file('archives');
@@ -256,11 +265,13 @@ class BlogController extends Controller
                         'file' => $fileName,
                         'sort_by' => "article-file",
                         'blog_id' => $param,
+                        'created_at' => Carbon::now()->toDateTimeString(),
+                        'updated_at' => Carbon::now()->toDateTimeString(),
                     ];
                 }
                 DB::table('archives')->insert($files);
             }
-    
+
             $tags = $request->tag;
             if ($tags) {
                 DB::table('keywords')->where('blog_id', $param)->delete();
@@ -268,6 +279,8 @@ class BlogController extends Controller
                     DB::table('keywords')->insert([
                         'blog_id' => $param,
                         'tag' => $tag,
+                        'created_at' => Carbon::now()->toDateTimeString(),
+                        'updated_at' => Carbon::now()->toDateTimeString(),
                     ]);
                 }
             }
@@ -278,11 +291,11 @@ class BlogController extends Controller
                 'message' => "Success update data",
             ]);
         }
-            return response()->json([
-                'code' => 500,
-                'status' => 'error',
-                'message' => "Internal server error: something problem from server!",
-            ]);
+        return response()->json([
+            'code' => 500,
+            'status' => 'error',
+            'message' => "Internal server error: something problem from server!",
+        ]);
     }
 
     public function destroy(Request $request)
@@ -307,10 +320,8 @@ class BlogController extends Controller
             $images = $dom->getElementsByTagName('img');
             foreach ($images as $key => $img) {
                 $src = $img->getAttribute('src');
-                // Extract the filename part from the image source URL
                 $filename = basename($src);
                 $path = 'uploads/posts/' . $filename;
-                // If you want to delete the image from storage, you can use the filename
                 if (File::exists('uploads/posts/' . $filename)) {
                     File::delete('uploads/posts/' . $filename);
                 }
@@ -322,59 +333,13 @@ class BlogController extends Controller
             return response()->json([
                 'code' => 200,
                 'status' => 'success',
-                'message' => "Data berhasil di hapus"
+                'message' => "Delete blog success"
             ]);
         }
         return response()->json([
             'code' => 400,
             'status' => 'error',
-            'message' => "Data gagal di hapus"
-        ]);
-    }
-
-    function delete_file($param)
-    {
-        if ($param) {
-            $data = DB::table('archives')->where('id', $param)->first();
-            $picturePath = 'uploads/files/' . $data->file;
-            if (File::exists($picturePath)) {
-                File::delete($picturePath);
-                DB::table('archives')->where('id', $param)->delete();
-            }
-        }
-        return response()->json(['success' => true, 'li' => 'li_' . $param]);
-    }
-
-    function image_upload(Request $request)
-    {
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = Str::slug(pathinfo(time(), PATHINFO_FILENAME), '-') . '.' . $image->getClientOriginalExtension();
-            $path = 'uploads/posts/';
-            $image->move(public_path($path), $imageName); // Use public_path() to get the full server path
-            $imageUrl = url($path . $imageName); // Generate full URL using url() helper
-            return response()->json(['url' => $imageUrl]);
-        }
-        return response()->json(['error' => 'No image uploaded.'], 400);
-    }
-
-    function image_delete(Request $request)
-    {
-        $filename = $request->input('filename');
-        $path = 'uploads/posts/' . $filename;
-        if ($filename && File::exists($path)) {
-            File::delete($path);
-
-            return response()->json([
-                'code' => 200,
-                'status' => 'success',
-                'message' => 'Image deleted successfully.'
-            ]);
-        }
-        return response()->json([
-            'code' => 400,
-            'status' => 'error',
-            'message' => 'Image not found or already deleted.'
+            'message' => "Bad Request"
         ]);
     }
 }

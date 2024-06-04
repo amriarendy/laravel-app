@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
@@ -23,10 +26,10 @@ class SettingController extends Controller
             )
             ->where('id', 1)
             ->first();
-        return view('setting.setting', compact('data'));
+        return view('setting', compact('data'));
     }
 
-    public function meta()
+    public function update(Request $request)
     {
         $request->validate(
             [
@@ -40,33 +43,33 @@ class SettingController extends Controller
                 'googlebotnews' => 'required|min:5|max:100',
             ],
             [
-                'title.required' => 'Input tidak boleh kosong',
-                'title.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'title.max' => 'Input judul tidak boleh lebih dari 100 karakter',
-                'description.required' => 'Input tidak boleh kosong',
-                'description.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'description.max' => 'Input judul tidak boleh lebih dari 255 karakter',
-                'keywords.required' => 'Input tidak boleh kosong',
-                'keywords.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'keywords.max' => 'Input judul tidak boleh lebih dari 200 karakter',
-                'author.required' => 'Input tidak boleh kosong',
-                'author.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'author.max' => 'Input judul tidak boleh lebih dari 100 karakter',
-                'copyright.required' => 'Input tidak boleh kosong',
-                'copyright.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'copyright.max' => 'Input judul tidak boleh lebih dari 100 karakter',
-                'robots.required' => 'Input tidak boleh kosong',
-                'robots.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'robots.max' => 'Input judul tidak boleh lebih dari 100 karakter',
-                'googlebot.required' => 'Input tidak boleh kosong',
-                'googlebot.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'googlebot.max' => 'Input judul tidak boleh lebih dari 100 karakter',
-                'googlebotnews.required' => 'Input tidak boleh kosong',
-                'googlebotnews.min' => 'Input judul tidak boleh kuran dari 5 karakter',
-                'googlebotnews.max' => 'Input judul tidak boleh lebih dari 100 karakter',
+                'title.required' => 'input is required',
+                'title.min' => 'max: 5 character',
+                'title.max' => 'max: 255 character',
+                'description.required' => 'input is required',
+                'description.min' => 'max: 5 character',
+                'description.max' => 'max: 255 character',
+                'keywords.required' => 'input is required',
+                'keywords.min' => 'max: 5 character',
+                'keywords.max' => 'max: 255 character',
+                'author.required' => 'input is required',
+                'author.min' => 'max: 5 character',
+                'author.max' => 'max: 100 character',
+                'copyright.required' => 'input is required',
+                'copyright.min' => 'max: 5 character',
+                'copyright.max' => 'max: 100 character',
+                'robots.required' => 'input is required',
+                'robots.min' => 'max: 5 character',
+                'robots.max' => 'max: 100 character',
+                'googlebot.required' => 'input is required',
+                'googlebot.min' => 'max: 5 character',
+                'googlebot.max' => 'max: 100 character',
+                'googlebotnews.required' => 'input is required',
+                'googlebotnews.min' => 'max: 5 character',
+                'googlebotnews.max' => 'max: 100 character',
             ]
         );
-        $update = Setting::where('id', 1)->update([
+        $update = DB::table('metas')->where('id', 1)->update([
             'title' => $request->title,
             'description' => $request->description,
             'keywords' => $request->keywords,
@@ -77,7 +80,7 @@ class SettingController extends Controller
             'googlebotnews' => $request->googlebotnews,
         ]);
         return response()->json([
-            'code' => 201,
+            'code' => 200,
             'status' => 'success',
             'message' => 'Data berhasil di update',
         ]);
@@ -85,11 +88,73 @@ class SettingController extends Controller
 
     public function favicon(Request $request)
     {
-
+        $rules = $request->validate(
+            [
+                'favicon' => 'required|mimes:jpeg,jpg,png,gif|max:1024',
+            ],
+            [
+                'favicon.required' => 'Input tidak boleh kosong',
+                'favicon.mimes' => 'Extension Cover: jpeg, jpg, png',
+                'favicon.max' => 'File max: 1mb',
+            ]
+        );
+        $data = DB::table('metas')->where('id', 1)->first();
+        $filename = $data->favicon;
+        $filePath = public_path("/{$filename}");
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+        }
+        if ($request->hasFile('favicon')) {
+            $folderPath = public_path('/');
+            $favicon = $request->file('favicon');
+            $originalFilename = $favicon->getClientOriginalName();
+            $extension = $favicon->getClientOriginalExtension();
+            $imageName = "favicon.{$extension}";
+            $favicon->move($folderPath, $imageName);
+            $update = DB::table('metas')->where('id', 1)->update([
+                'favicon' => $imageName,
+            ]);
+        }
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'File berhasil di upload',
+        ]);
     }
 
     public function image(Request $request)
     {
-        
+        $rules = $request->validate(
+            [
+                'image' => 'required|mimes:jpeg,jpg,png,gif|max:1024',
+            ],
+            [
+                'image.required' => 'Input tidak boleh kosong',
+                'image.mimes' => 'Extension Cover: jpeg, jpg, png',
+                'image.max' => 'File max: 1mb',
+            ]
+        );
+        $data = DB::table('metas')->where('id', 1)->first();
+        $filename = $data->image;
+        $filePath = public_path("/{$filename}");
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+        }
+        if ($request->hasFile('image')) {
+            $folderPath = public_path('/');
+            $image = $request->file('image');
+            $originalFilename = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $imageName = "image.{$extension}";
+            $image->move($folderPath, $imageName);
+            $update = DB::table('metas')->where('id', 1)->update([
+                'image' => $imageName,
+            ]);
+        }
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'File berhasil di upload',
+        ]);
     }
 }

@@ -204,7 +204,7 @@
                     $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
                     if (res.code == 200) {
                         $('#editForm')[0].reset();
-                        window.location = "{{ route('blog') }}";
+                        window.location = "{{ route('blog.list') }}";
                         return Toast.fire({
                             icon: "success",
                             title: '<b class="text-success">Success</b>',

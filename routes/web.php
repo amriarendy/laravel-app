@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\CategoryController;
 use App\Http\Controllers\Master\TagController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,17 +20,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('/');
+Route::get('/', [WelcomeController::class, 'index'])->name('/');
+Route::get('/blog', [WelcomeController::class, 'blog'])->name('blog');
+Route::get('/blog/{slug}', [WelcomeController::class, 'blog_category'])->name('blog.category');
+Route::get('/detail/{slug}', [WelcomeController::class, 'detail'])->name('blog.detail');
 Route::get('/reload-captcha', [WelcomeController::class, 'captcha'])->name('reload.captcha');
-Route::post('/test', [WelcomeController::class, 'test'])->name('test');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    // dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile_update'])->name('profile');
+    Route::get('/dashboard/profile/update', [DashboardController::class, 'profile_update'])->name('profile.update');
+    Route::get('/dashboard/profile/update-password', [DashboardController::class, 'change_password'])->name('profile.update.password');
     // users
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('users');
     Route::post('/dashboard/users/store', [UserController::class, 'store'])->name('users.store');
@@ -46,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/master/category/update', [CategoryController::class, 'update'])->name('category.update');
     Route::post('/dashboard/master/category/delete', [CategoryController::class, 'destroy'])->name('category.delete');
     // blog
-    Route::get('/dashboard/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/dashboard/blog', [BlogController::class, 'index'])->name('blog.list');
     Route::get('/dashboard/blog/create', [BlogController::class, 'create'])->name('blog.create');
     Route::post('/dashboard/blog/store', [BlogController::class, 'store'])->name('blog.store');
     Route::get('/dashboard/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
@@ -54,13 +57,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/blog/delete', [BlogController::class, 'destroy'])->name('blog.delete');
     // setting
     Route::get('/dashboard/setting', [SettingController::class, 'index'])->name('setting');
-    Route::get('/dashboard/meta/update', [SettingController::class, 'update'])->name('meta.update');
-    Route::get('/dashboard/favicon/update', [SettingController::class, 'favicon'])->name('favicon.update');
-    Route::get('/dashboard/image/update', [SettingController::class, 'image'])->name('image.update');
+    Route::post('/dashboard/meta/update', [SettingController::class, 'update'])->name('meta.update');
+    Route::post('/dashboard/favicon/update', [SettingController::class, 'favicon'])->name('favicon.update');
+    Route::post('/dashboard/image/update', [SettingController::class, 'image'])->name('image.update');
     // feature
-    Route::post('/dashboard/image-upload', [BlogController::class, 'image_upload'])->name('image.upload');
-    Route::post('/dashboard/image-delete', [BlogController::class, 'image_delete'])->name('image.delete');
-    Route::delete('/dashboard/file-delete/{id}', [BlogController::class, 'delete_file'])->name('file.delete');
+    Route::post('/dashboard/image-upload', [DashboardController::class, 'image_upload'])->name('image.upload');
+    Route::post('/dashboard/image-delete', [DashboardController::class, 'image_delete'])->name('image.delete');
+    Route::delete('/dashboard/file-delete/{id}', [DashboardController::class, 'delete_file'])->name('file.delete');
 });
 
 require __DIR__ . '/auth.php';

@@ -3,7 +3,7 @@
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Pengaturan</h1>
+    <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Settings</h1>
     <a href="#" id="linkButton" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-database fa-sm text-white-50"></i> Backup Database</a>
 </div>
 
@@ -80,7 +80,10 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button type="submit" id="editBtn" class="btn btn-primary btn-block"> Submit </button>
+                    <button type="submit" id="editBtn" class="btn btn-primary btn-block">
+                        <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                        <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -95,7 +98,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Gambar</th>
+                                <th>Images</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -112,7 +115,7 @@
                             <tr>
                                 <td class="text-center">
                                     <img class="img-fluid mt-1 mb-1" style="width: 5rem;" src="{{ asset($data->image) }}" alt="favicon"><br>
-                                    <small>favicon</small>
+                                    <small>Image</small>
                                 </td>
                                 <td class="text-center">
                                     <a class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#imageModal" title="" style="cursor: pointer;">
@@ -125,9 +128,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-6 col-md-12">
-        <div class="card"></div>
     </div>
 </div>
 
@@ -152,7 +152,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" id="editBtnFavicon" class="btn btn-primary">Submit</button>
+                    <button type="submit" id="editBtnFavicon" class="btn btn-primary">
+                        <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                        <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -181,7 +184,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" id="editImage" class="btn btn-primary">Submit</button>
+                    <button type="submit" id="editImage" class="btn btn-primary">
+                        <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+                        <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -216,18 +222,24 @@
     $(document).on('submit', '#editForm', function(e) {
         e.preventDefault();
         $.ajax({
-            url: "{{ route('setting.update') }}",
+            url: "{{ route('meta.update') }}",
             type: 'POST',
             data: new FormData(this),
             contentType: false,
             processData: false,
             success: function(res) {
                 $("#pageloader").fadeOut();
-                if (res.code == 201) {
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                if (res.code == 200) {
                     $('#editModal').modal('hide');
                     $('#editForm')[0].reset();
-                    window.location = "{{ route('setting') }}";
-                    return toastr[res.status](res.status, res.message);
+                    // window.location = "{{ route('setting') }}";
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "success create data!",
+                    });
                 }
             },
             error: function(err) {
@@ -249,6 +261,13 @@
                 $('#errGoogleBot').append(errorGoogleBot && !$('#errGoogleBot').text().includes(errorGoogleBot) ? '<span class="text-danger">' + errorGoogleBot + '</span><br/>' : '');
                 $('#errGoogleBotNews').append(errorGoogleBotNews && !$('#errGoogleBotNews').text().includes(errorGoogleBotNews) ? '<span class="text-danger">' + errorGoogleBotNews + '</span><br/>' : '');
                 $("#pageloader").fadeOut();
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                return Toast.fire({
+                    icon: "error",
+                    title: '<b class="text-danger">Unprocessable Content</b>',
+                    text: "unable to be followed due to semantic errors.",
+                });
             }
         });
     });
@@ -257,18 +276,24 @@
     $(document).on('submit', '#formFavicon', function(e) {
         e.preventDefault();
         $.ajax({
-            url: "{{ route('setting.favicon.update') }}",
+            url: "{{ route('favicon.update') }}",
             type: 'POST',
             data: new FormData(this),
             contentType: false,
             processData: false,
             success: function(res) {
                 $("#pageloader").fadeOut();
-                if (res.code == 201) {
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                if (res.code == 200) {
                     $('#formFavicon')[0].reset();
                     $('#faviconModal').modal('hide');
                     window.location = "{{ route('setting') }}";
-                    return toastr[res.status](res.status, res.message);
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "success update data!",
+                    });
                 }
             },
             error: function(err) {
@@ -276,6 +301,13 @@
                 let errorFavicon = error.errors.favicon;
                 $('#errFavicon').append(errorFavicon && !$('#errFavicon').text().includes(errorFavicon) ? '<span class="text-danger">' + errorFavicon + '</span><br/>' : '');
                 $("#pageloader").fadeOut();
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                return Toast.fire({
+                    icon: "error",
+                    title: '<b class="text-danger">Unprocessable Content</b>',
+                    text: "unable to be followed due to semantic errors.",
+                });
             }
         });
     });
@@ -284,18 +316,29 @@
     $(document).on('submit', '#formImage', function(e) {
         e.preventDefault();
         $.ajax({
-            url: "{{ route('setting.image.update') }}",
+            url: "{{ route('image.update') }}",
             type: 'POST',
             data: new FormData(this),
             contentType: false,
             processData: false,
             success: function(res) {
                 $("#pageloader").fadeOut();
-                if (res.code == 201) {
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                if (res.code == 200) {
                     $('#formImage')[0].reset();
                     $('#ImageModal').modal('hide');
                     window.location = "{{ route('setting') }}";
-                    return toastr[res.status](res.status, res.message);
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "success update data!",
+                    });
+                    return Toast.fire({
+                        icon: "error",
+                        title: '<b class="text-danger">Unprocessable Content</b>',
+                        text: "unable to be followed due to semantic errors.",
+                    });
                 }
             },
             error: function(err) {
@@ -303,6 +346,13 @@
                 let errorImage = error.errors.image;
                 $('#errImage').append(errorImage && !$('#errImage').text().includes(errorImage) ? '<span class="text-danger">' + errorImage + '</span><br/>' : '');
                 $("#pageloader").fadeOut();
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                return Toast.fire({
+                    icon: "error",
+                    title: '<b class="text-danger">Unprocessable Content</b>',
+                    text: "unable to be followed due to semantic errors.",
+                });
             }
         });
     });

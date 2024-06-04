@@ -163,7 +163,7 @@
                 <div id="collapseArticle" class="collapse" aria-labelledby="headingContent" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Writter Content:</h6>
-                        <a class="collapse-item" href="{{route('blog')}}">Blogs</a>
+                        <a class="collapse-item" href="{{route('blog.list')}}">Blogs</a>
                     </div>
                 </div>
             </li>
@@ -214,7 +214,7 @@
                 <div id="collapseSetting" class="collapse" aria-labelledby="headingSetting" data-parent="#accordionSidebar">
                     <div class="bg-black py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Setting Menu:</h6>
-                        <a class="collapse-item" href="{{ route('/') }}">Meta Data</a>
+                        <a class="collapse-item" href="{{ route('setting') }}">Meta Data</a>
                     </div>
                 </div>
             </li>
