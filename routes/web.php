@@ -29,9 +29,9 @@ Route::get('/reload-captcha', [WelcomeController::class, 'captcha'])->name('relo
 Route::middleware('auth')->group(function () {
     // dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/profile', [DashboardController::class, 'profile_update'])->name('profile');
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/dashboard/profile/update', [DashboardController::class, 'profile_update'])->name('profile.update');
-    Route::get('/dashboard/profile/update-password', [DashboardController::class, 'change_password'])->name('profile.update.password');
+    Route::get('/dashboard/profile/update-password', [DashboardController::class, 'change_password'])->name('profile.password');
     // users
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('users');
     Route::post('/dashboard/users/store', [UserController::class, 'store'])->name('users.store');
@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/meta/update', [SettingController::class, 'update'])->name('meta.update');
     Route::post('/dashboard/favicon/update', [SettingController::class, 'favicon'])->name('favicon.update');
     Route::post('/dashboard/image/update', [SettingController::class, 'image'])->name('image.update');
+    // information
+    Route::get('/dashboard/information', [SettingController::class, 'information'])->name('information');
     // feature
     Route::post('/dashboard/image-upload', [DashboardController::class, 'image_upload'])->name('image.upload');
     Route::post('/dashboard/image-delete', [DashboardController::class, 'image_delete'])->name('image.delete');

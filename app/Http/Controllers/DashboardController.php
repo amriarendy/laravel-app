@@ -70,14 +70,109 @@ class DashboardController extends Controller
 
     public function profile()
     {
+        $data = DB::table('users')
+            ->select(
+                'users.id',
+                'users.email',
+                'users.name',
+                'users.picture',
+            )
+            ->where('users.id', Auth::user()->id)
+            ->first();
+        return view('profile', compact('data'));
     }
 
-    public function profile_update()
+    public function profile_update(Request $request)
     {
+        $rules = $request->validate(
+            [
+                'name' => 'required',
+                'bio' => 'max:255',
+            ],
+            [
+                'name.required' => 'Input nama tidak boleh kosong',
+                'bio.max' => 'Input bio tidak boleh lebih dari 255 karakter',
+            ]
+        );
+        $sessionID = Auth::user()->id;
+        if ($sessionID) {
+            if ($request->cropped) {
+                $data = User::where('id', $sessionID)->first();
+                if ($data->picture !== "default.png") {
+                    Storage::delete("/public/profile/" . $data->picture);
+                }
+                $folderPath = 'public/profile';
+                $image_parts = explode(";base64,", $request->cropped);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $imageName = time() . '_' . Str::slug(pathinfo($data->email, PATHINFO_FILENAME), '-') . '.png';
+                Storage::put("{$folderPath}/{$imageName}", $image_base64);
+                $update = User::where('id', $sessionID)->update([
+                    'name' => $request->name,
+                    'picture' => $imageName,
+                    'bio' => $request->bio,
+                ]);
+            } else {
+                $update = User::where('id', $sessionID)->update([
+                    'name' => $request->name,
+                    'bio' => $request->bio,
+                ]);
+            }
+            $log = Log::create([
+                'user_id' => Auth::user()->id,
+                'ip_addr' => Location::get()->ip,
+                'log' => Auth::user()->email . " Update Profile",
+            ]);
+            return response()->json([
+                'code' => 201,
+                'status' => 'success',
+                'message' => 'Data berhasil di update',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 401,
+                'status' => 'error',
+                'message' => 'Unauthorized',
+            ]);
+        }
     }
 
-    public function change_password()
+    public function change_password(Request $request)
     {
+        $rules = $request->validate(
+            [
+                'password' => 'required',
+                'password_confirm' => 'required|same:password',
+            ],
+            [
+                'password.required' => 'Input password tidak boleh kosong',
+                'password_confirm.required' => 'Input konfirmasi password tidak boleh kosong',
+                'password_confirm.same' => 'Konfirmasi password harus sama',
+            ]
+        );
+        $sessionID = Auth::user()->id;
+        if ($sessionID) {
+            $change_password = User::where('id', $sessionID)->update([
+                'password' => Hash::make($request->password),
+            ]);
+            $log = Log::create([
+                'user_id' => Auth::user()->id,
+                'ip_addr' => Location::get()->ip,
+                'log' => Auth::user()->email . " Update Password",
+            ]);
+            return response()->json([
+                'code' => 201,
+                'status' => 'success',
+                'message' => 'Data berhasil di input',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 401,
+                'status' => 'error',
+                'message' => 'Unauthorized',
+            ]);
+        }
     }
 
     function delete_file($param)
