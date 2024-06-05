@@ -42,7 +42,7 @@
                     <tr>
                         <td class="text-center">{{ $loop->iteration}}. </td>
                         <td>{{ $row->title }}</td>
-                        <td class="text-center">{{ $row->category }}</td>
+                        <td class="text-center">{{ $row->category_id }}</td>
                         <td class="text-center">{{ $row->name }}</td>
                         <td class="text-center">{{ $row->id }}</td>
                         <td class="text-center">{{ $row->date_post }}</td>

@@ -4,10 +4,17 @@
 <main role="main" class="container">
     <div class="row">
         <div class="col-md-8 blog-main">
-            <h3 class="pb-4 mb-4 border-bottom">
-                {{ $data->category_id }}
-            </h3>
-
+            @if ($data->image === null || $data->image == "")
+            <div class="text-center my-3" style="max-height: 300px; margin: -30px -30px 20px -30px; overflow: hidden;">
+                <img width="600" height="400" src="https://placehold.co/700x400?text=Image+Not+Found" class="img-thumbnail img-fluid mx-auto d-block" alt="...">
+            </div>
+            @else
+            <div class="text-center my-3" style="max-height: 300px; margin: -30px -30px 20px -30px; overflow: hidden;">
+                <img width="600" height="400" src="{{ asset('uploads/thumb/' . $data->image) }}" class="img-thumbnail img-fluid mx-auto d-block" alt="cover image">
+            </div>
+            @endif
+            
+            <div class="my-3 border-bottom"></div>
             <div class="blog-post">
                 <h2 class="blog-post-title">{{ $data->title }}</h2>
                 <p class="blog-post-meta">{{ date('Y-m-d', strtotime($data->date_post)) }} <a href="#">{{ $data->name }}</a></p>
@@ -21,8 +28,11 @@
             <!-- /.blog-post -->
 
             <nav class="blog-pagination">
-                <a class="btn btn-outline-primary" href="#">Older</a>
-                <a class="btn btn-outline-secondary disabled">Newer</a>
+                @if ($keywords)
+                @foreach ($keywords as $row)
+                <a class="btn btn-outline-primary" href="#">{{ $row->tag }}</a>
+                @endforeach
+                @endif
             </nav>
 
         </div><!-- /.blog-main -->
@@ -37,7 +47,7 @@
                 <h4 class="font-italic">Blog Categories</h4>
                 <ol class="list-unstyled mb-0">
                     @foreach ($categories as $row)
-                    <li><a href="{{ route('blog.category'), ['slug' => $row->slug] }}">{{ strtoupper($row->category) }}</a></li>
+                    <li><a href="{{ route('blog.category', $row->slug) }}">{{ strtoupper($row->category) }}</a></li>
                     @endforeach
                 </ol>
             </div>
@@ -45,9 +55,9 @@
             <div class="p-4">
                 <h4 class="font-italic">Tranding Today</h4>
                 <ol class="list-unstyled">
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Facebook</a></li>
+                    @foreach ($tranding as $row)
+                    <li><a href="{{ route('blog.detail', $row->slug) }}">{{ $row->title }}</a></li>
+                    @endforeach
                 </ol>
             </div>
         </aside><!-- /.blog-sidebar -->

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class WelcomeController extends Controller
 {
     public function index()
     {
-        $blog_latest = DB::table('blogs')
+        $latest = DB::table('blogs')
             ->select(
                 'blogs.id',
                 'blogs.title',
@@ -24,27 +25,32 @@ class WelcomeController extends Controller
                 'users.name',
             )
             ->join('users', 'blogs.user_id', '=', 'users.id')
-            ->where('category_id', 'berita')
             ->orderBy('date_post', 'desc')
             ->limit(6)
             ->get();
-        $blog_trending = DB::table('blogs')
-            ->select(
-                'blogs.id',
-                'blogs.title',
-                'blogs.description',
-                'blogs.image',
-                'blogs.slug',
-                'blogs.date_post',
-                'blogs.category_id',
-                'blogs.created_at',
-                'users.name',
-            )
-            ->join('users', 'blogs.user_id', '=', 'users.id')
-            ->where('category_id', 'berita')
-            ->orderBy('date_post', 'desc')
-            ->limit(3)
-            ->get();
+        $tranding = DB::table('blogs')
+        ->leftJoin('users', 'blogs.user_id', '=', 'users.id')
+        ->leftJoin('master_categories', 'blogs.category_id', '=', 'master_categories.id')
+        ->leftJoin('views', 'blogs.id', '=', 'views.blog_id') // Left join with views table
+        ->select(
+            'blogs.id',
+            'blogs.title',
+            'blogs.description',
+            'blogs.body',
+            'blogs.image',
+            'blogs.slug',
+            'blogs.date_post',
+            'blogs.category_id',
+            'blogs.created_at',
+            'users.name AS name',
+            'master_categories.category AS category',
+            DB::raw('COUNT(views.blog_id) AS view_count'), // Select the count of views
+        )
+        ->whereDate('views.created_at', date('Y-m-d')) // Filter by date
+        ->groupBy('blogs.id', 'blogs.title', 'blogs.description', 'blogs.body', 'blogs.image', 'blogs.slug', 'blogs.date_post', 'blogs.category_id', 'blogs.created_at', 'users.name', 'master_categories.category')
+        ->orderBy('view_count', 'desc')
+        ->limit(6)
+        ->get();
         $view = DB::table('views')->insert([
             'blog_id' => null,
             'route' => URL::current(),
@@ -67,10 +73,10 @@ class WelcomeController extends Controller
             'googlebotnews' => $setting->googlebotnews ?? '',
             'sitename' => $setting->sitename ?? '',
         ];
-        return view('welcome', compact('meta', 'blog_latest', 'blog_trending', 'categories'));
+        return view('welcome', compact('meta', 'latest', 'tranding', 'categories'));
     }
 
-    public function blog()
+    public function blog(Request $request, $param=null)
     {
         $categories = DB::table('master_categories')->get();
         $setting = DB::table('metas')->where('id', 1)->first();
@@ -88,50 +94,47 @@ class WelcomeController extends Controller
             'googlebotnews' => $setting->googlebotnews ?? '',
             'sitename' => $setting->sitename ?? '',
         ];
-        $blog = DB::table('blogs')
-            ->select(
-                'blogs.id',
-                'blogs.title',
-                'blogs.description',
-                'blogs.image',
-                'blogs.slug',
-                'blogs.date_post',
-                'blogs.category_id',
-                'blogs.created_at',
-                'users.name',
-            )
-            ->join('users', 'blogs.user_id', '=', 'users.id')
-            ->orderBy('date_post', 'desc')
-            ->limit(12)
-            ->get();
+        if ($param) {
+            $data = DB::table('blogs')
+                ->select(
+                    'blogs.id',
+                    'blogs.title',
+                    'blogs.description',
+                    'blogs.image',
+                    'blogs.slug',
+                    'blogs.date_post',
+                    'blogs.category_id',
+                    'blogs.created_at',
+                    'users.name',
+                )
+                ->where('category_id', $param)
+                ->join('users', 'blogs.user_id', '=', 'users.id')
+                ->orderBy('date_post', 'desc')
+                ->paginate(12);
+        } else {
+            $data = DB::table('blogs')
+                ->select(
+                    'blogs.id',
+                    'blogs.title',
+                    'blogs.description',
+                    'blogs.image',
+                    'blogs.slug',
+                    'blogs.date_post',
+                    'blogs.category_id',
+                    'blogs.created_at',
+                    'users.name',
+                )
+                ->join('users', 'blogs.user_id', '=', 'users.id')
+                ->orderBy('date_post', 'desc')
+                ->paginate(12);
+        }
         $view = DB::table('views')->insert([
             'blog_id' => null,
             'route' => URL::current(),
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);
-        return view('content.index', compact('meta', 'blog', 'categories'));
-    }
-
-    public function blog_category(Request $request, $param)
-    {
-        $blog = DB::table('blogs')
-            ->select(
-                'blogs.id',
-                'blogs.title',
-                'blogs.description',
-                'blogs.image',
-                'blogs.slug',
-                'blogs.date_post',
-                'blogs.category_id',
-                'blogs.created_at',
-                'users.name',
-            )
-            ->where('category_id', $param)
-            ->join('users', 'blogs.user_id', '=', 'users.id')
-            ->orderBy('date_post', 'desc')
-            ->limit(12)
-            ->get();
+        return view('content.index', compact('meta', 'data', 'categories'));
     }
 
     public function detail(Request $request, $param)
@@ -155,6 +158,9 @@ class WelcomeController extends Controller
         $files = DB::table('archives')
             ->where('blog_id', $data->id)
             ->get();
+        $keywords = DB::table('keywords')
+            ->where('blog_id', $data->id)
+            ->get();
         $view = DB::table('views')->insert([
             'blog_id' => $data->id,
             'route' => URL::current(),
@@ -163,6 +169,35 @@ class WelcomeController extends Controller
         ]);
         $categories = DB::table('master_categories')->get();
         $setting = DB::table('metas')->where('id', 1)->first();
+        $tranding = DB::table('blogs')
+        ->leftJoin('users', 'blogs.user_id', '=', 'users.id')
+        ->leftJoin('master_categories', 'blogs.category_id', '=', 'master_categories.id')
+        ->leftJoin('views', 'blogs.id', '=', 'views.blog_id') // Left join with views table
+        ->select(
+            'blogs.id',
+            'blogs.title',
+            'blogs.description',
+            'blogs.body',
+            'blogs.image',
+            'blogs.slug',
+            'blogs.date_post',
+            'blogs.category_id',
+            'blogs.created_at',
+            'users.name AS name',
+            'master_categories.category AS category',
+            DB::raw('COUNT(views.blog_id) AS view_count'), // Select the count of views
+        )
+        ->whereDate('views.created_at', date('Y-m-d')) // Filter by date
+        ->groupBy('blogs.id', 'blogs.title', 'blogs.description', 'blogs.body', 'blogs.image', 'blogs.slug', 'blogs.date_post', 'blogs.category_id', 'blogs.created_at', 'users.name', 'master_categories.category')
+        ->orderBy('view_count', 'desc')
+        ->limit(6)
+        ->get();
+        $view = DB::table('views')->insert([
+            'blog_id' => null,
+            'route' => URL::current(),
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ]);
         $meta = [
             'title' => $setting->title ?? '',
             'description' => $setting->description ?? '',
@@ -177,7 +212,7 @@ class WelcomeController extends Controller
             'googlebotnews' => $setting->googlebotnews ?? '',
             'sitename' => $setting->sitename ?? '',
         ];
-        return view('content.detail', compact('meta', 'data', 'files', 'categories'));
+        return view('content.detail', compact('meta', 'data', 'files', 'categories', 'keywords', 'tranding'));
     }
 
     public function captcha()

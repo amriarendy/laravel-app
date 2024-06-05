@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('/');
 Route::get('/blog', [WelcomeController::class, 'blog'])->name('blog');
-Route::get('/blog/{slug}', [WelcomeController::class, 'blog_category'])->name('blog.category');
+Route::get('/blog/{slug}', [WelcomeController::class, 'blog'])->name('blog.category');
 Route::get('/detail/{slug}', [WelcomeController::class, 'detail'])->name('blog.detail');
 Route::get('/reload-captcha', [WelcomeController::class, 'captcha'])->name('reload.captcha');
 

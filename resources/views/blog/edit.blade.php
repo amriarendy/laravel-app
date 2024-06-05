@@ -112,7 +112,7 @@
                         <div id="errBody"></div>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="croppedImage" id="croppedImage" value="">
+                        <input type="hidden" name="croppedImage" id="croppedImage" value="">
                     </div>
                 </div>
             </div>
@@ -248,12 +248,12 @@
         $image_crop = $('#imageShow').croppie({
             enableExif: true,
             viewport: {
-                width: 250,
+                width: 200,
                 height: 200,
                 type: 'square',
             },
             boundary: {
-                width: 250,
+                width: 200,
                 height: 200,
             },
             showZoomer: true,
