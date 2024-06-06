@@ -17,10 +17,10 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-dark mb-1">
-                            <span style="font-size: 1rem;"><b>Kunjungan Halaman Utama</b></span>
+                            <span style="font-size: 1rem;"><b>Main Page Visit</b></span>
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ $dataOnToday }}<small class="font-weight-bold"> Kunjungan Hari Ini</small>
+                            {{ $dataOnToday }}<small class="font-weight-bold"> Visitor Today</small>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -38,10 +38,10 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-dark mb-1">
-                            <span style="font-size: 1rem;"><b>Total Kunjungan</b></span>
+                            <span style="font-size: 1rem;"><b>Total Visitor</b></span>
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            {{ $dataTotal }} <small class="font-weight-bold"> Kunjungan</small>
+                            {{ $dataTotal }} <small class="font-weight-bold"> Visitor</small>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -99,7 +99,7 @@
         <!-- Area Chart -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Statistik Kunjungan Halaman Utama {{ date('Y') }}</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Statistics of Main Page Visits {{ date('Y') }}</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area" style="height: 100%;">
@@ -112,7 +112,7 @@
         <!-- Area Chart -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Blog Populer Hari Ini</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Blog Tranding Today</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -120,7 +120,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Judul</th>
+                                <th>Title</th>
                                 <th>Views</th>
                             </tr>
                         </thead>
@@ -129,7 +129,7 @@
                             <tr>
                                 <th>{{ $loop->iteration}}. </th>
                                 <th><small>{{mb_strimwidth($row->title, 0, 30, "...")}}</small></th>
-                                <td class="text-center">{{ $row->view_count}} Dilihat </td>
+                                <td class="text-center">{{ $row->view_count}} Views </td>
                             </tr>
                             @endforeach
                         </tbody>

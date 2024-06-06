@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -36,14 +37,44 @@ class BlogController extends Controller
             ->groupBy('blogs.id')
             ->orderBy('blogs.created_at', 'DESC') // Order by created_at column
             ->get();
-        return view('blog.index', compact('data'));
+            $setting = DB::table('metas')->where('id', 1)->first();
+            $meta = [
+                'title' => "Dashboard - " . $setting->title ?? '',
+                'description' => $setting->description ?? '',
+                'favicon' => asset($setting->favicon) ?? '',
+                'keywords' => $setting->keywords ?? '',
+                'author' => $setting->author ?? '',
+                'image' => asset($setting->image) ?? '',
+                'copyright' => $setting->copyright ?? '',
+                'canonical' => URL::current() ?? '',
+                'robots' => $setting->robots ?? '',
+                'googlebot' => $setting->googlebot ?? '',
+                'googlebotnews' => $setting->googlebotnews ?? '',
+                'sitename' => $setting->sitename ?? '',
+            ];
+        return view('blog.index', compact('data', 'meta'));
     }
 
     public function create()
     {
         $categories = DB::table('master_categories')->select('id', 'category')->orderBy('created_at', 'desc')->get();
         $keywords = DB::table('master_tags')->select('tag')->orderBy('created_at', 'desc')->get();
-        return view('blog.add', compact('categories', 'keywords'));
+        $setting = DB::table('metas')->where('id', 1)->first();
+        $meta = [
+            'title' => "Dashboard - " . $setting->title ?? '',
+            'description' => $setting->description ?? '',
+            'favicon' => asset($setting->favicon) ?? '',
+            'keywords' => $setting->keywords ?? '',
+            'author' => $setting->author ?? '',
+            'image' => asset($setting->image) ?? '',
+            'copyright' => $setting->copyright ?? '',
+            'canonical' => URL::current() ?? '',
+            'robots' => $setting->robots ?? '',
+            'googlebot' => $setting->googlebot ?? '',
+            'googlebotnews' => $setting->googlebotnews ?? '',
+            'sitename' => $setting->sitename ?? '',
+        ];
+        return view('blog.add', compact('categories', 'keywords', 'meta'));
     }
 
     public function store(Request $request)
@@ -180,7 +211,23 @@ class BlogController extends Controller
             ->select('id', 'tag', 'blog_id')
             ->where('blog_id', decrypt($param))
             ->get();
-        return view('blog.edit', compact('data', 'categories', 'keywords', 'archives', 'tags'));
+            
+        $setting = DB::table('metas')->where('id', 1)->first();
+        $meta = [
+            'title' => "Dashboard - " . $setting->title ?? '',
+            'description' => $setting->description ?? '',
+            'favicon' => asset($setting->favicon) ?? '',
+            'keywords' => $setting->keywords ?? '',
+            'author' => $setting->author ?? '',
+            'image' => asset($setting->image) ?? '',
+            'copyright' => $setting->copyright ?? '',
+            'canonical' => URL::current() ?? '',
+            'robots' => $setting->robots ?? '',
+            'googlebot' => $setting->googlebot ?? '',
+            'googlebotnews' => $setting->googlebotnews ?? '',
+            'sitename' => $setting->sitename ?? '',
+        ];
+        return view('blog.edit', compact('data', 'categories', 'keywords', 'archives', 'tags', 'meta'));
     }
 
     public function update(Request $request)

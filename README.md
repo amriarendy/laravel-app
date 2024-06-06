@@ -1,5 +1,7 @@
 # Laravel Starter Blog and Company Profile
 
+![App Screenshot](http://127.0.0.1:8000/dashboard.png)
+
 ## Installation
 
 Download or Clone Project From Github
@@ -55,6 +57,5 @@ Start the npm server
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/amriarendy/)
 [![twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=Twitter&logoColor=white)](https://x.com/amriarendy/)
 
-## Buy Mee Coffe
-
-I'm a full stack developer...
+## ☕ Donate Coffee
+[![saweria](https://img.shields.io/badge/Buy%20coffee-6F4E37?style=for-the-badge&logo=ko-fi&logoColor=white)](https://saweria.co/amriarendy/)

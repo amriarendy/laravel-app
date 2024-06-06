@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard - Starter Company Profile</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}" />
-    <meta name="description" content="Starter Laravel Company Profile" />
-    <meta name="keywords" content="amriarendy, landingpage, companyprofile, panel companyprofile, panel administrator" />
-    <meta name="author" content="amriarendy" />
+    <title>{{ $meta['title'] }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ $meta['favicon'] }}" />
+    <meta name="description" content="{{ $meta['description'] }}" />
+    <meta name="keywords" content="{{ $meta['keywords'] }}" />
+    <meta name="author" content="{{ $meta['author'] }}" />
     <meta name="image" content="" />
-    <meta name="copyright" content="amriarendy" />
+    <meta name="copyright" content="{{ $meta['author'] }}" />
     <meta name="canonical" content="{{ URL::current(); }}" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="googlebot" content="noindex, nofollow" />
@@ -221,7 +221,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('/') }}">
+                <a class="nav-link" href="{{ route('information') }}">
                     <i class="fas fa-fw fa-info-circle"></i>
                     <span>Information</span></a>
             </li>
@@ -262,7 +262,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-light-600 font-weight-bold small">{{ Auth::user()->name; }}</span>
                                 <div class="topbar-divider d-none d-sm-block"></div>
-                                <img class="img-profile rounded-circle" src="{{ asset(Auth::user()->picture) }}">
+                                <img class="img-profile rounded-circle" src="{{ asset('uploads/profile/' .Auth::user()->picture) }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -304,7 +304,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Development by <b>Amria Rendy</b></span>
+                        <span>Development by <a href="https://github.com/amriarendy/"><b>Amria Rendy</b></a></span>
                     </div>
                 </div>
             </footer>
@@ -325,12 +325,12 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Logout?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Klik <span class="text-danger font-weight-bold">LogOut</span> Untuk Keluar Dari Aplikasi.</div>
+                <div class="modal-body">Click: <span class="text-danger font-weight-bold">LogOut</span> for destroy session application.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <form method="POST" action="{{ route('logout') }}">

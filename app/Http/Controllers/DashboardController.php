@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\User;
 use DOMDocument;
 
 class DashboardController extends Controller
@@ -65,7 +68,22 @@ class DashboardController extends Controller
             ->orderBy('view_count', 'desc')
             ->limit(10)
             ->get();
-        return view('dashboard', compact('dataOnYear', 'dataOnToday', 'dataTotal', 'totalBlog', 'totalTag', 'trends'));
+        $setting = DB::table('metas')->where('id', 1)->first();
+        $meta = [
+            'title' => "Dashboard - " . $setting->title ?? '',
+            'description' => $setting->description ?? '',
+            'favicon' => asset($setting->favicon) ?? '',
+            'keywords' => $setting->keywords ?? '',
+            'author' => $setting->author ?? '',
+            'image' => asset($setting->image) ?? '',
+            'copyright' => $setting->copyright ?? '',
+            'canonical' => URL::current() ?? '',
+            'robots' => $setting->robots ?? '',
+            'googlebot' => $setting->googlebot ?? '',
+            'googlebotnews' => $setting->googlebotnews ?? '',
+            'sitename' => $setting->sitename ?? '',
+        ];
+        return view('dashboard', compact('dataOnYear', 'dataOnToday', 'dataTotal', 'totalBlog', 'totalTag', 'trends', 'meta'));
     }
 
     public function profile()
@@ -79,7 +97,22 @@ class DashboardController extends Controller
             )
             ->where('users.id', Auth::user()->id)
             ->first();
-        return view('profile', compact('data'));
+            $setting = DB::table('metas')->where('id', 1)->first();
+            $meta = [
+                'title' => "Dashboard - " . $setting->title ?? '',
+                'description' => $setting->description ?? '',
+                'favicon' => asset($setting->favicon) ?? '',
+                'keywords' => $setting->keywords ?? '',
+                'author' => $setting->author ?? '',
+                'image' => asset($setting->image) ?? '',
+                'copyright' => $setting->copyright ?? '',
+                'canonical' => URL::current() ?? '',
+                'robots' => $setting->robots ?? '',
+                'googlebot' => $setting->googlebot ?? '',
+                'googlebotnews' => $setting->googlebotnews ?? '',
+                'sitename' => $setting->sitename ?? '',
+            ];
+        return view('profile', compact('data', 'meta'));
     }
 
     public function profile_update(Request $request)
@@ -87,55 +120,38 @@ class DashboardController extends Controller
         $rules = $request->validate(
             [
                 'name' => 'required',
-                'bio' => 'max:255',
             ],
             [
-                'name.required' => 'Input nama tidak boleh kosong',
-                'bio.max' => 'Input bio tidak boleh lebih dari 255 karakter',
+                'name.required' => 'Name is required',
             ]
         );
-        $sessionID = Auth::user()->id;
-        if ($sessionID) {
             if ($request->cropped) {
-                $data = User::where('id', $sessionID)->first();
-                if ($data->picture !== "default.png") {
-                    Storage::delete("/public/profile/" . $data->picture);
+                if (File::exists('uploads/profile/' . Auth::user()->picture)) {
+                    if (Auth::user()->picture !== "default.svg") {
+                        File::delete('uploads/profile/' . Auth::user()->picture);
+                    }
                 }
-                $folderPath = 'public/profile';
                 $image_parts = explode(";base64,", $request->cropped);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type = $image_type_aux[1];
                 $image_base64 = base64_decode($image_parts[1]);
-                $imageName = time() . '_' . Str::slug(pathinfo($data->email, PATHINFO_FILENAME), '-') . '.png';
-                Storage::put("{$folderPath}/{$imageName}", $image_base64);
-                $update = User::where('id', $sessionID)->update([
+                $imageName = Str::slug(pathinfo(Auth::user()->email, PATHINFO_FILENAME)) . '-' .  Str::random(5) . '.png';
+                $filePath = public_path('uploads/profile/' . $imageName);
+                file_put_contents($filePath, $image_base64);
+                $update = User::where('id', Auth::user()->id)->update([
                     'name' => $request->name,
                     'picture' => $imageName,
-                    'bio' => $request->bio,
                 ]);
             } else {
-                $update = User::where('id', $sessionID)->update([
+                $update = User::where('id', Auth::user()->id)->update([
                     'name' => $request->name,
-                    'bio' => $request->bio,
                 ]);
             }
-            $log = Log::create([
-                'user_id' => Auth::user()->id,
-                'ip_addr' => Location::get()->ip,
-                'log' => Auth::user()->email . " Update Profile",
-            ]);
             return response()->json([
-                'code' => 201,
+                'code' => 200,
                 'status' => 'success',
                 'message' => 'Data berhasil di update',
             ]);
-        } else {
-            return response()->json([
-                'code' => 401,
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ]);
-        }
     }
 
     public function change_password(Request $request)
@@ -151,28 +167,14 @@ class DashboardController extends Controller
                 'password_confirm.same' => 'Konfirmasi password harus sama',
             ]
         );
-        $sessionID = Auth::user()->id;
-        if ($sessionID) {
-            $change_password = User::where('id', $sessionID)->update([
+            $change_password = User::where('id', Auth::user()->id)->update([
                 'password' => Hash::make($request->password),
-            ]);
-            $log = Log::create([
-                'user_id' => Auth::user()->id,
-                'ip_addr' => Location::get()->ip,
-                'log' => Auth::user()->email . " Update Password",
             ]);
             return response()->json([
                 'code' => 201,
                 'status' => 'success',
                 'message' => 'Data berhasil di input',
             ]);
-        } else {
-            return response()->json([
-                'code' => 401,
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ]);
-        }
     }
 
     function delete_file($param)

@@ -10,7 +10,7 @@
         <!-- Content Row -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="modal-title font-weight-bold" id="addModalLabel">Profil Detail</h5>
+                <h5 class="modal-title font-weight-bold" id="addModalLabel">Profile</h5>
             </div>
             <div class="card-body">
                 <form class="form" action="" id="editForm" method="POST" enctype="multipart/form-data">
@@ -33,10 +33,9 @@
                     </div>
             </div>
             <div class="card-footer">
-                <button type="submit" id="editBtn" class="btn btn-primary">
-                    <i class="fas fa-spinner fa-spin" style="display:none;"></i>
-                    <span class="text-loader">Submit</span>
-                </button>
+                <button type="submit" id="editBtn" class="btn btn-primary font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+            <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+          </button>
             </div>
             </form>
         </div>
@@ -45,7 +44,7 @@
         <!-- Content Row -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="modal-title font-weight-bold" id="addModalLabel">Ubah Password</h5>
+                <h5 class="modal-title font-weight-bold" id="addModalLabel">Change Password</h5>
             </div>
             <div class="card-body">
                 <form class="form" action="" id="passForm" name="passForm" method="POST" enctype="multipart/form-data">
@@ -62,10 +61,9 @@
                     </div>
             </div>
             <div class="card-footer">
-                <button type="submit" id="passBtn" class="btn btn-primary">
-                    <i class="fas fa-spinner fa-spin" style="display:none;"></i>
-                    <span class="text-loader">Submit</span>
-                </button>
+                <button type="submit" id="passBtn" class="btn btn-primary font-weight-bold"> <i class="fas fa-spinner fa-spin" style="display:none;"></i>
+            <span class="text-loader"><i class="fas fa-save"></i> Submit</span>
+          </button>
             </div>
             </form>
         </div>
@@ -94,6 +92,11 @@
 </div>
 <!-- ./Modal Croppie -->
 <script>
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
     /* Edit Data */
     $(document).on('submit', '#editForm', function(e) {
         e.preventDefault();
@@ -104,12 +107,19 @@
             contentType: false,
             processData: false,
             success: function(res) {
-                if (res.code == 201) {
+                $("#pageloader").fadeOut();
+                $(".btn .fa-spinner").hide();
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                if (res.code == 200) {
                     $('#editModal').modal('hide');
                     $('#editForm')[0].reset();
-                    window.location = "{{ route('profile') }}";
+                    // window.location = "{{ route('profile') }}";
                     $('.table').load(location.href + ' .table');
-                    return toastr[res.status](res.status, res.message);
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "success update data!",
+                    });
                 }
             },
             error: function(err) {
@@ -118,6 +128,14 @@
                 let errorBio = error.errors.bio;
                 $('#errNameEdit').append(errorName && !$('#errNameEdit').text().includes(errorName) ? '<span class="text-danger">' + errorName + '</span><br/>' : '');
                 $('#errBioEdit').append(errorBio && !$('#errBioEdit').text().includes(errorBio) ? '<span class="text-danger">' + errorBio + '</span><br/>' : '');
+                $("#pageloader").fadeOut();
+                    $(".btn .fa-spinner").hide();
+                    $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                    return Toast.fire({
+                        icon: "error",
+                        title: '<b class="text-danger">Unprocessable Content</b>',
+                        text: "unable to be followed due to semantic errors.",
+                    });
             }
         });
     });
@@ -133,11 +151,15 @@
             success: function(res) {
                 $("#pageloader").fadeOut();
                 $(".btn .fa-spinner").hide();
-                $(".btn .text-loader").html("Submit");
-                if (res.code == 201) {
+                $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                if (res.code == 200) {
                     $('#passForm')[0].reset();
                     $('.table').load(location.href + ' .table');
-                    return toastr[res.status](res.status, res.message);
+                    return Toast.fire({
+                        icon: "success",
+                        title: '<b class="text-success">Success</b>',
+                        text: "success update data!",
+                    });
                 }
             },
             error: function(err) {
@@ -147,8 +169,13 @@
                 $('#errPassChg').append(errorPassword && !$('#errPassChg').text().includes(errorPassword) ? '<span class="text-danger">' + errorPassword + '</span><br/>' : '');
                 $('#errPassChgConfirm').append(errorPasswordConfirm && !$('#errPassChgConfirm').text().includes(errorPasswordConfirm) ? '<span class="text-danger">' + errorPasswordConfirm + '</span><br/>' : '');
                 $("#pageloader").fadeOut();
-                $(".btn .fa-spinner").hide();
-                $(".btn .text-loader").html("Submit");
+                    $(".btn .fa-spinner").hide();
+                    $(".btn .text-loader").html('<i class="fas fa-save"></i> Submit');
+                    return Toast.fire({
+                        icon: "error",
+                        title: '<b class="text-danger">Unprocessable Content</b>',
+                        text: "unable to be followed due to semantic errors.",
+                    });
             }
         });
     });

@@ -30,8 +30,8 @@ Route::middleware('auth')->group(function () {
     // dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
-    Route::get('/dashboard/profile/update', [DashboardController::class, 'profile_update'])->name('profile.update');
-    Route::get('/dashboard/profile/update-password', [DashboardController::class, 'change_password'])->name('profile.password');
+    Route::post('/dashboard/profile/update', [DashboardController::class, 'profile_update'])->name('profile.update');
+    Route::post('/dashboard/profile/update-password', [DashboardController::class, 'change_password'])->name('profile.password');
     // users
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('users');
     Route::post('/dashboard/users/store', [UserController::class, 'store'])->name('users.store');

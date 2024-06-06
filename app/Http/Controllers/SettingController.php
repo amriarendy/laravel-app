@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,7 +27,22 @@ class SettingController extends Controller
             )
             ->where('id', 1)
             ->first();
-        return view('setting', compact('data'));
+            $setting = DB::table('metas')->where('id', 1)->first();
+            $meta = [
+                'title' => "Dashboard - " . $setting->title ?? '',
+                'description' => $setting->description ?? '',
+                'favicon' => asset($setting->favicon) ?? '',
+                'keywords' => $setting->keywords ?? '',
+                'author' => $setting->author ?? '',
+                'image' => asset($setting->image) ?? '',
+                'copyright' => $setting->copyright ?? '',
+                'canonical' => URL::current() ?? '',
+                'robots' => $setting->robots ?? '',
+                'googlebot' => $setting->googlebot ?? '',
+                'googlebotnews' => $setting->googlebotnews ?? '',
+                'sitename' => $setting->sitename ?? '',
+            ];
+        return view('setting', compact('data', 'meta'));
     }
 
     public function update(Request $request)
@@ -156,5 +172,25 @@ class SettingController extends Controller
             'status' => 'success',
             'message' => 'File berhasil di upload',
         ]);
+    }
+
+    public function information()
+    {
+        $setting = DB::table('metas')->where('id', 1)->first();
+        $meta = [
+            'title' => "Dashboard - " . $setting->title ?? '',
+            'description' => $setting->description ?? '',
+            'favicon' => asset($setting->favicon) ?? '',
+            'keywords' => $setting->keywords ?? '',
+            'author' => $setting->author ?? '',
+            'image' => asset($setting->image) ?? '',
+            'copyright' => $setting->copyright ?? '',
+            'canonical' => URL::current() ?? '',
+            'robots' => $setting->robots ?? '',
+            'googlebot' => $setting->googlebot ?? '',
+            'googlebotnews' => $setting->googlebotnews ?? '',
+            'sitename' => $setting->sitename ?? '',
+        ];
+        return view('information', compact('meta'));
     }
 }

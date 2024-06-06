@@ -44,7 +44,7 @@
                         <td>{{ $row->title }}</td>
                         <td class="text-center">{{ $row->category_id }}</td>
                         <td class="text-center">{{ $row->name }}</td>
-                        <td class="text-center">{{ $row->id }}</td>
+                        <td class="text-center">{{ $row->view_count }} views</td>
                         <td class="text-center">{{ $row->date_post }}</td>
                         <td class="text-center">
                             <a class="btn-circle btn-sm btn-dark mt-1 mb-1" href="{{ route('blog.edit', encrypt($row->id)) }}" title="Edit"><i class="fas fa-pencil-alt"></i></a>
