@@ -1,6 +1,6 @@
 # Laravel Starter Blog and Company Profile
 
-![App Screenshot]([http://127.0.0.1:8000/dashboard.png](https://github.com/amriarendy/laravel-app/blob/main/public/dashboard.png))
+![App Screenshot](https://github.com/amriarendy/laravel-app/blob/main/public/dashboard.png)
 
 ## Installation
 
