@@ -1,6 +1,6 @@
 # Laravel Starter Blog and Company Profile
 
-![App Screenshot](http://127.0.0.1:8000/dashboard.png)
+![App Screenshot]([http://127.0.0.1:8000/dashboard.png](https://github.com/amriarendy/laravel-app/blob/main/public/dashboard.png))
 
 ## Installation
 
@@ -50,7 +50,7 @@ Start the npm server
   npm run dev
 ```
 
-## 🔗 Links
+## 🔗 Follow Me!!
 
 [![github](https://img.shields.io/badge/github-0C0C0C?style=for-the-badge&logo=github&logoColor=dark)](https://github.com/amriarendy/)
 [![instagram](https://img.shields.io/badge/instagram-FD1D1D?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/amriarendy/)
